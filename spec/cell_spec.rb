@@ -36,13 +36,24 @@ describe Cell do
       expect(@cell.fired_upon?).to eq(true)
     end
 
-    it "being fired_upon reduces ship health" do
-      @cell.place_ship(@ship)
+    it "being fired upon reduces ship health" do
       expect(@cell.ship.health).to eq(3)
       @cell.fire_upon
       expect(@cell.ship.health).to eq(2)
       @cell.fire_upon
       expect(@cell.ship.health).to eq(1)
+    end
+
+    it "renders hits, misses, ships and empty space" do
+      cell2 = Cell.new("C3")
+      expect(cell2.render).to eq(".")
+      cell2.fire_upon
+      expect(cell2.render).to eq("M")
+      expect(@cell.render(true)).to eq("S")
+      @cell.fire_upon
+      expect(@cell.render).to eq("H")
+      2.times {@cell.fire_upon}
+      expect(@cell.render).to eq("X")
     end
   end
 
