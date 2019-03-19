@@ -12,7 +12,6 @@ class Ship
 
   def hit
     @health -= 1
-    puts @health
   end
 
 end
