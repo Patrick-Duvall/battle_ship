@@ -1,3 +1,6 @@
+Co-authored-by: Patrick <duvallp208@gmail.com>
+Co-authored-by: Chris <davisc1014@gmail.com>
+
 pry(main)> require './lib/ship'
 #=> true
 
