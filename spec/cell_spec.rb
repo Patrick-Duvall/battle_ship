@@ -1,4 +1,3 @@
-require "rspec/autorun"
 require "./lib/ship"
 require "./lib/cell"
 describe Cell do
@@ -30,6 +29,7 @@ describe Cell do
     @cell.fire_upon
     expect(@cell.fired_upon?).to eq(true)
   end
+
   it "being fired_upon reduces ship health" do
     @cell.place_ship(@ship)
     expect(@cell.ship.health).to eq(3)
