@@ -18,7 +18,7 @@ describe Ship do
   end
 
   it "hits cause loss of health" do
-    @ship.hit
+   @ship.hit
     expect(@ship.health).to eq(2)
     @ship.hit
     expect(@ship.health).to eq(1)
@@ -26,8 +26,7 @@ describe Ship do
 
   it "sinks at 0 health" do
     expect(@ship.sunk?).to eq(false)
-    # 3 times{@ship.hit} todo
-    @ship.hit until @ship.health == 0
+    3.times{@ship.hit}
     expect(@ship.sunk?).to be(true)
   end
 end
