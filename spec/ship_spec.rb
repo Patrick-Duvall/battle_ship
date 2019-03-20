@@ -1,4 +1,3 @@
-require "rspec/autorun"
 require "./lib/ship"
 describe Ship do
 
