@@ -51,9 +51,9 @@ describe Board do
       !expect(@board.valid_consecutive?(@submarine, ["C1", "B1"]))
     end
 
-    it "places ships"
 
-    end
+
+    
 
   end
 

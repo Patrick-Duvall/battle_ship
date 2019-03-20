@@ -39,37 +39,19 @@ class Board
   # end
 
   def valid_consecutive?(ship, placement_array)
-    # change letter to ord
-    letters = placement_array.map{|el| el[0].ord}
+    counter = 0
+    letters = placement_array.map{|el| el[0]}
     numbers = placement_array.map{|el| el[1].to_i}
-    same = "letter" if letters.all?{|letter| letter == letters[0]}
-    same = "number" if numbers.all?{|number| numbers == numbers[0]}
-    if same == "letter"
-      consecutive = numbers.chunk_while do |current, nextelement|
-        current+1 == nextelement || current-1 == nextelement
-      end
-      consecutive.to_a.length == 1
-    elsif same == "number"
-      consecutive = letters.chunk_while do |current, nextelement|
-        current+1 == nextelement || current-1 == nextelement
-      end
-      consecutive.to_a.length == 1
-    else
-      return false
-    end
+    #refactoir?
+    same = "letter" if letters[0] == letters[1]
+    same = "number" if numbers[0] == numbers[1]
 
-    # counter = 0
-    # direction = ''
-    # placement_array.each do |placement|
-    #   binding.pry
-    #   letter = placement[0].ord
-    #   number = placement[1]
-    # end
+
   end
   #
-  # def in_bounds
-  # => all?
-  # end
+  def valid_bounds?(ship,placement_array)
+    placement_array.all?{|placement| @cells.include?(placement)}
+  end
   #
   # def does_not_overlap
   #
