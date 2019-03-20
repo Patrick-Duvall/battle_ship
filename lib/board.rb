@@ -25,25 +25,31 @@ class Board
     ship.length == placement_array.length
   end
 #letters same nums consec or nums same letters consec
+
+  # def array_increments_by?(array)
+  #   sorted = array.sort
+  #   lastNum = sorted[0]
+  #   sorted[1, sorted.count].each do |el|
+  #     if lastNum + step != el
+  #       return false
+  #     end
+  #     lastNum = n
+  #   end
+  #   true
+  # end
+
   def valid_consecutive?(ship, placement_array)
     counter = 0
     letters = placement_array.map{|el| el[0]}
-    numbers = placement_array.map{|el| el[1]}
+    numbers = placement_array.map{|el| el[1].to_i}
     #refactoir?
     same = "letter" if letters[0] == letters[1]
     same = "number" if numbers[0] == numbers[1]
-    if same == "letter"
-      numbers.each_cons(ship.length)
-    else
-      letters.each_cons(ship.length)
-    end
-
-    # counter = 0
-    # direction = ''
-    # placement_array.each do |placement|
-    #   binding.pry
-    #   letter = placement[0].ord
-    #   number = placement[1]
+    binding.pry
+    # if same == "letter"
+    #   numbers.each.each{|enum|enum.next -1 == enum || enum.next +1 == enum}
+    # else
+    #   numbers.each.each{|enum|enum.next -1 == enum || enum.next +1 == enum}
     # end
   end
   #
