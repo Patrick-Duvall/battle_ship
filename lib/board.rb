@@ -24,34 +24,31 @@ class Board
   def valid_length?(ship, placement_array)
     ship.length == placement_array.length
   end
-#letters same nums consec or nums same letters consec
-
-  # def array_increments_by?(array)
-  #   sorted = array.sort
-  #   lastNum = sorted[0]
-  #   sorted[1, sorted.count].each do |el|
-  #     if lastNum + step != el
-  #       return false
-  #     end
-  #     lastNum = n
-  #   end
-  #   true
-  # end
 
   def valid_consecutive?(ship, placement_array)
     counter = 0
     letters = placement_array.map{|el| el[0]}
     numbers = placement_array.map{|el| el[1].to_i}
-    #refactoir?
-    same = "letter" if letters[0] == letters[1]
-    same = "number" if numbers[0] == numbers[1]
-
-
+    same = "letter" if letters.all?{|letter| letter == letters[0]}
+    same = "number" if numbers.all?{|number| numbers == numbers[0]}
+    if same == "letter"
+      consecutive = numbers.chunk_while do |current, nextelement|
+        current+1 == nextelement || current-1 == nextelement
+      end
+      consecutive.to_a.length == 1
+    elsif same == "number"
+      consecutive = letters.chunk_while do |current, nextelement|
+        current+1 == nextelement || current-1 == nextelement
+      end
+      consecutive.to_a.length == 1
+    else
+      return false
+    end
   end
-  #
-  def valid_bounds?(ship,placement_array)
-    placement_array.all?{|placement| @cells.include?(placement)}
-  end
+
+  # def in_bounds
+  # => all?
+  # end
   #
   # def does_not_overlap
   #
