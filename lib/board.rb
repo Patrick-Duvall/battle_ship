@@ -39,17 +39,31 @@ class Board
   # end
 
   def valid_consecutive?(ship, placement_array)
-    counter = 0
-    letters = placement_array.map{|el| el[0]}
+    # change letter to ord
+    letters = placement_array.map{|el| el[0].ord}
     numbers = placement_array.map{|el| el[1].to_i}
-    #refactoir?
-    same = "letter" if letters[0] == letters[1]
-    same = "number" if numbers[0] == numbers[1]
-    binding.pry
-    # if same == "letter"
-    #   numbers.each.each{|enum|enum.next -1 == enum || enum.next +1 == enum}
-    # else
-    #   numbers.each.each{|enum|enum.next -1 == enum || enum.next +1 == enum}
+    same = "letter" if letters.all?{|letter| letter == letters[0]}
+    same = "number" if numbers.all?{|number| numbers == numbers[0]}
+    if same == "letter"
+      consecutive = numbers.chunk_while do |current, nextelement|
+        current+1 == nextelement || current-1 == nextelement
+      end
+      consecutive.to_a.length == 1
+    elsif same == "number"
+      consecutive = letters.chunk_while do |current, nextelement|
+        current+1 == nextelement || current-1 == nextelement
+      end
+      consecutive.to_a.length == 1
+    else
+      return false
+    end
+
+    # counter = 0
+    # direction = ''
+    # placement_array.each do |placement|
+    #   binding.pry
+    #   letter = placement[0].ord
+    #   number = placement[1]
     # end
   end
   #
