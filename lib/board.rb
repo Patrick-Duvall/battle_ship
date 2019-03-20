@@ -46,17 +46,23 @@ class Board
     end
   end
 
-  # def in_bounds
-  # => all?
-  # end
-  #
-  # def does_not_overlap
-  #
-  # end
+  def valid_bounds?(ship,placement_array)
+   placement_array.all?{|placement| @cells.include?(placement)}
+ end
+
+ def place(ship, placement_array)
+   placement_array.each{|placement| @cells[placement].place_ship(ship)}
+ end
+
+ def valid_overlap?(ship,placement_array)
+   placement_array.all?{|placement| @cells[placement].empty?}
+
+ end
+
+ def valid_placement?(ship,placement_array)
+   valid_bounds?(ship,placement_array) && valid_consecutive?(ship, placement_array)
+ end
 
 
-  def valid_placement?(ship, placement_array)
-    valid_length(ship, placement_array)
-  end
 
 end

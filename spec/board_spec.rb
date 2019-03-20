@@ -51,9 +51,25 @@ describe Board do
       !expect(@board.valid_consecutive?(@submarine, ["C1", "B1"]))
     end
 
+    it "validates ship placement is not diagonal" do
+     !expect(@board.valid_placement?(@cruiser, ["A1", "B2", "C3"]))
+     !expect(@board.valid_placement?(@submarine, ["C2", "D3"]))
+   end
+
+   it "validates correct ship placements" do
+     expect(@board.valid_placement?(@submarine, ["A1", "A2"]))
+     expect(@board.valid_placement?(@cruiser, ["B1", "C1", "D1"]))
+   end
+
+   it "validates no overlap when placing ships" do
+     @board.place(@cruiser, ["A1", "A2", "A3"])
+     !expect(@board.valid_placement?(@submarine, ["A1", "B1"]))
+     expect(@board.valid_placement?(@submarine, ["B1", "B2"]))
+   end
 
 
-    
+
+
 
   end
 
