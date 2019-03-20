@@ -21,4 +21,9 @@ class Board
     @cells.include?(coordinate)
   end
 
+
+  def valid_placement?(ship, placement_array)
+
+  end
+
 end

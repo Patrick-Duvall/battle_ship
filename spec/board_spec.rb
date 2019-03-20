@@ -16,6 +16,8 @@ describe Board do
   context "generate board" do
     before do
       @board.cell_gen()
+      @cruiser = Ship.new("Cruiser", 3)
+      @submarine = Ship.new("Submarine", 2)
     end
     it "has cells" do
       (@board.cells).each{|cell| expect cell.is_a?(Cell)}
@@ -32,7 +34,21 @@ describe Board do
     end
 
     it "validates ship placements" do
-      
+      #check length
+      !expect(@board.valid_placement?(@cruiser, ["A1", "A2"]))
+      !expect(@board.valid_placement?(@submarine, ["A1", "A2", "A3"]))
+      #check consecutive
+      !expect(@board.valid_placement?(@cruiser, ["A1", "A2", "A4"]))
+      !expect(@board.valid_placement?(@submarine, ["A1", "C1"]))
+      !expect(@board.valid_placement?(@cruiser, ["A3", "A2", "A1"]))
+      !expect(@board.valid_placement?(@submarine, ["C1", "B1"]))
+      #!diagonal
+      !expect(@board.valid_placement?(@cruiser, ["A1", "B2", "C3"]))
+      !expect(@board.valid_placement?(@submarine, ["C2", "D3"]))
+      #valid placements
+      expect(@board.valid_placement?(@submarine, ["A1", "A2"]))
+      expect(@board.valid_placement?(@cruiser, ["B1", "C1", "D1"]))
+
     end
 
   end
