@@ -44,16 +44,8 @@ class Board
     else
       return false
     end
-
-    # counter = 0
-    # direction = ''
-    # placement_array.each do |placement|
-    #   binding.pry
-    #   letter = placement[0].ord
-    #   number = placement[1]
-    # end
   end
-  #
+  
   # def in_bounds
   # => all?
   # end
