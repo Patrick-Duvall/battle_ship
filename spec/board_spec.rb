@@ -44,7 +44,6 @@ describe Board do
     end
 
     it "validates ship placement is consecutive" do
-      binding.pry
       !expect(@board.valid_consecutive?(@cruiser, ["A1", "A2", "A4"]))
       !expect(@board.valid_consecutive?(@submarine, ["A1", "C1"]))
       !expect(@board.valid_consecutive?(@cruiser, ["A3", "A2", "A1"]))
