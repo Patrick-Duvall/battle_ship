@@ -1,5 +1,4 @@
 require "./lib/ship"
-require "pry"
 describe Ship do
 
   before do

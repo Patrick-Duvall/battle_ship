@@ -1,7 +1,6 @@
 require "./lib/ship"
 require "./lib/cell"
 require "./lib/board"
-require "pry"
 describe Board do
 
   before do
@@ -18,7 +17,6 @@ describe Board do
       @board.cell_gen()
       @cruiser = Ship.new("Cruiser", 3)
       @submarine = Ship.new("Submarine", 2)
-      # binding.pry
     end
     it "has cells" do
       (@board.cells).each{|cell| expect cell.is_a?(Cell)}
@@ -35,13 +33,13 @@ describe Board do
     end
 
     it "validates ship placement is in bounds" do
-      !expect(@board.valid_placement?(@cruiser, ["E1", "E2"]))
-      !expect(@board.valid_placement?(@submarine, ["A5", "A6", "A7"]))
+      !expect(@board.valid_bounds?(@cruiser, ["E1", "E2"]))
+      !expect(@board.valid_bounds?(@submarine, ["A5", "A6", "A7"]))
     end
 
     it "validates ship placement length" do
-      !expect(@board.valid_placement?(@cruiser, ["A1", "A2"]))
-      !expect(@board.valid_placement?(@submarine, ["A1", "A2", "A3"]))
+      !expect(@board.valid_length?(@cruiser, ["A1", "A2"]))
+      !expect(@board.valid_length?(@submarine, ["A1", "A2", "A3"]))
     end
 
     it "validates ship placement is consecutive" do
@@ -58,8 +56,8 @@ describe Board do
    end
 
    it "validates correct ship placements" do
-     expect(@board.valid_placement?(@submarine, ["A1", "A2"]))
-     expect(@board.valid_placement?(@cruiser, ["B1", "C1", "D1"]))
+    expect(@board.valid_placement?(@submarine, ["A1", "A2"]))
+    expect(@board.valid_placement?(@cruiser, ["B1", "C1", "D1"]))
    end
 
    it "validates no overlap when placing ships" do
@@ -67,15 +65,6 @@ describe Board do
      !expect(@board.valid_placement?(@submarine, ["A1", "B1"]))
      expect(@board.valid_placement?(@submarine, ["B1", "B2"]))
    end
-
-   it "renders a board" do
-
-     @board.place(@cruiser, ["A1", "A2", "A3"])
-     expect(@board.render()).to eq("  1 2 3 4 \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n")
-     expect(@board.render(true)).to eq("  1 2 3 4 \nA S S S . \nB . . . . \nC . . . . \nD . . . . \n")
-   end
-
-
 
   end
 
