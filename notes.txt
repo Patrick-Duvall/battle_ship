@@ -1,18 +1,6 @@
 Co-authored-by: Patrick <duvallp208@gmail.com>
 Co-authored-by: Chris <davisc1014@gmail.com>
 
-def drawBoard
-        @board = Hash.new
-        ('a'..'h').each do |letter|
-            (1..9).each do |i|
-                @board["#{letter}#{i}"] = "*"
-                print @board["#{letter}#{i}"]
-            end
-            puts
-        end
-end
-
-
 List of all user inputs
 
 SETUP
@@ -51,20 +39,37 @@ List of all outputs -
 
 SETUP
 
-Welcome message, UI 20
+Welcome message, UI 8
 
-prompt for board size, UI 23
+prompt for board size, UI 11
 
-prompt for preset or custom ships. UI 26
+prompt for preset or custom ships. UI 14
 
 if preset, list ships. include ship name and length. Example:
 The Cruiser is two units long and the Submarine is three units long.
 
-if custom, prompt for how many ships - UI 32
-Prompt for ship name and length, UI 33 - Repeat prompt looped to number of ships
+if custom, prompt for how many ships - UI 20
+Prompt for ship name and length, UI 21 - Repeat prompt looped to number of ships
 
 end if
 
-prompt for ship placement - UI 39 - Repeat prompt looped to number of ships
+prompt for ship placement - UI 27 - Repeat prompt looped to number of ships
 
 TURN
+
+start of turn display both boards - computer board is on top, no CPU ships visible
+
+prompt for user to fire at cpu - player will always go first. - UI 33
+
+result of player shot - Example: Your shot on A4 was a miss.
+
+result of cpu shot - Example: My shot on C1 was a miss.
+
+loop to start of turn.
+
+GAME END
+
+result of game, example: You won! || I won!
+prompt to play again - reuse UI 8
+
+END
