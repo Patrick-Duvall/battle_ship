@@ -12,9 +12,9 @@ class Game
 
   def welcome
     puts "Welcome to BATTLESHIP"
-    puts "Enter p to play. Enter q to quit."
     answered = false
     while answered == false
+      puts "Enter p to play. Enter q to quit."
       print "> "
       input = gets.chomp
       case
@@ -30,9 +30,9 @@ class Game
 
   def choose_game
     puts "Would you like to play a small game, a full game, or a custom game?"
-    puts "Enter either small, full, or custom."
     answered = false
     while answered == false
+      puts "Enter either small, full, or custom."
       print "> "
       input = gets.chomp
       case
@@ -73,9 +73,9 @@ class Game
   end
 
   def set_board_size
+    puts "Please select the size of the board."
     answered = false
     while answered == false
-      puts "Please select the size of the board."
       puts "Enter only a single number, between 4 and 10, for the size."
       print "> "
       input = gets.chomp
@@ -86,12 +86,58 @@ class Game
     @cpuboard = Board.new
     @playerboard.cell_gen(input.to_i)
     @cpuboard.cell_gen(input.to_i)
-    self.make_custom_fleet
+    self.number_of_ships
   end
 
-  def make_custom_fleet
+  def number_of_ships
     puts "How many ships would you like to play with?"
+    answered = false
+    while answered == false
+      puts "Enter only a single number. The minimum is 2, and the maximum is " +
+      "two less then the length of the board."
+      print "> "
+      input = gets.chomp
+      answered = (2..@playerboard.size - 2).to_a.include?(input.to_i)
+    end
+    self.make_custom_fleet(input.to_i)
   end
+
+  def make_custom_fleet(shipsleft)
+    while shipsleft > 0
+      puts "You have #{shipsleft} ships left to create."
+      puts "What should this ship be named?"
+      print "> "
+      shipname = gets.chomp
+        answered = false
+        while answered == false
+          puts "How long should this ship be?"
+          puts "Enter only a single number. The minimum is 2, and the " +
+          "maximum is one less then the length of the board."
+          print "> "
+          shiplength = gets.chomp
+          answered = (2..@playerboard.size - 1).to_a.include?(shiplength.to_i)
+        end
+      puts "So, we're creating a ship called #{shipname} that is " +
+      "#{shiplength} units long?"
+      yesorno = false
+      while yesorno == false
+        puts "please enter yes or no."
+        print "> "
+        input = gets.chomp
+        case
+          when input.downcase == "y" || input.downcase == "yes"
+            puts "Ship created!"
+            customship = Ship.new(shipname, shiplength)
+            @ships << customship
+            yesorno = true
+            shipsleft -= 1
+          when input.downcase == "n" || input.downcase == "no"
+            puts "Ship not created."
+            yesorno = true
+          end
+        end
+      end
+    end
 
   def place_ship_prompt
     puts "I have laid out my ships on the grid."
@@ -103,9 +149,9 @@ class Game
   end
 end
 
-# 
-# g = Game.new
-#
-# g.welcome
-# g.set_board_size
-# g.choose_game
+
+g = Game.new
+
+g.welcome
+g.set_board_size
+g.choose_game
