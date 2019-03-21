@@ -18,6 +18,7 @@ describe Board do
       @board.cell_gen()
       @cruiser = Ship.new("Cruiser", 3)
       @submarine = Ship.new("Submarine", 2)
+      # binding.pry
     end
     it "has cells" do
       (@board.cells).each{|cell| expect cell.is_a?(Cell)}
@@ -67,7 +68,12 @@ describe Board do
      expect(@board.valid_placement?(@submarine, ["B1", "B2"]))
    end
 
-
+   it "renders a board" do
+     skip
+     @board.place(@cruiser, ["A1", "A2", "A3"])
+     expect(@board.render()).to eq("  1 2 3 4 \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n")
+     expect(@board.render(true)).to eq("  1 2 3 4 \nA S S S . \nB . . . . \nC . . . . \nD . . . . \n")
+   end
 
 
 
