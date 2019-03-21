@@ -28,7 +28,7 @@ class Board
   # end
 
   def valid_consecutive?(ship, placement_array)
-      letters = placement_array.map{|placement| placement[0]}
+      letters = placement_array.map{|placement| placement[0].to_i}
       numbers = placement_array.map{|placement| placement[1].to_i}
       #dont need "number", left in for readability"
       same = letters.uniq.length == 1 ? "letter" : "number"
@@ -36,10 +36,9 @@ class Board
         consecutive = numbers.chunk_while do |current, next_el|
           current+1 == next_el || current-1 == next_el
         end
-        else same == "number"
-          #add map to_i to avoid conversion error
-          consecutive = letters.map(&:to_i).chunk_while do |current, next_el|
-            current+1 == next_el || current-1 == next_el
+      else same == "number"
+        consecutive = letters.chunk_while do |current, next_el|
+          current+1 == next_el || current-1 == next_el
         end
       end
       consecutive.to_a.length == 1
@@ -71,13 +70,12 @@ def render(visible = false)
   counter = 0
   @size.times do |i|
      string += "#{@letters[i]} "
-     # binding.pry
    @size.times do
      string += "#{@cells.values[counter].render(visible)} "
      counter +=1
    end
    string += "\n"
- end
+end
   string
 end
 
