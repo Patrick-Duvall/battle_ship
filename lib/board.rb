@@ -10,10 +10,10 @@ class Board
   def cell_gen(num=4)
     @size = num
     # 64 to avoid off by 1 error
-    letters = ("A".."#{(64 + num).chr}").to_a
-    numbers = ("1".."#{num}").to_a
-    letters.each do |letter|
-      numbers.each do |number|
+    @letters = ("A".."#{(64 + num).chr}").to_a
+    @numbers = ("1".."#{num}").to_a
+    @letters.each do |letter|
+      @numbers.each do |number|
         @cells[(letter+number)] = Cell.new(letter + number)
       end
     end
@@ -23,33 +23,9 @@ class Board
     @cells.include?(coordinate)
   end
 
-  def valid_length?(ship, placement_array)
-    ship.length == placement_array.length
-  end
-
-
-
-  # def valid_consecutive?(ship, placement_array)
-  #   letters = placement_array.map{|el| el[0]}
-  #   numbers = placement_array.map{|el| el[1].to_i}
-  #
-  #   same = letters.all?{|letter| letter == letters[0]} ? "letter" : "number"
-  #   same = "letter" if letters.all?{|letter| letter == letters[0]}
-  #   same = "number" if numbers.all?{|number| numbers == numbers[0]}
-  #   if same == "letter"
-  #     consecutive = numbers.chunk_while do |current, next_el|
-  #       current+1 == next_el || current-1 == next_el
-  #     end
-  #     consecutive.to_a.length == 1
-  #   elsif same == "number"
-  #     consecutive = letters.chunk_while{ |current, next_el|
-  #       current+1 == next_el || current-1 == next_el}
-  #     consecutive.to_a.length == 1
-  #   else
-  #     false
-  #   end
+  # def valid_length?(ship, placement_array)
+  #   ship.length == placement_array.length
   # end
-
 
   def valid_consecutive?(ship, placement_array)
       letters = placement_array.map{|placement| placement[0]}
@@ -91,7 +67,17 @@ class Board
 def render(visible = false)
   string = '  '
   @size.times{|num| string += "#{num + 1} "}
-
+  string +="\n"
+  counter = 0
+  @size.times do |i|
+     string += "#{@letters[i]} "
+     # binding.pry
+   @size.times do
+     string += "#{@cells.values[counter].render(visible)} "
+     counter +=1
+   end
+   string += "\n"
+ end
   string
 end
 

@@ -40,8 +40,8 @@ describe Board do
     end
 
     it "validates ship placement length" do
-      !expect(@board.valid_length?(@cruiser, ["A1", "A2"]))
-      !expect(@board.valid_length?(@submarine, ["A1", "A2", "A3"]))
+      !expect(@board.valid_placement?(@cruiser, ["A1", "A2"]))
+      !expect(@board.valid_placement?(@submarine, ["A1", "A2", "A3"]))
     end
 
     it "validates ship placement is consecutive" do
@@ -69,7 +69,7 @@ describe Board do
    end
 
    it "renders a board" do
-     skip
+
      @board.place(@cruiser, ["A1", "A2", "A3"])
      expect(@board.render()).to eq("  1 2 3 4 \nA . . . . \nB . . . . \nC . . . . \nD . . . . \n")
      expect(@board.render(true)).to eq("  1 2 3 4 \nA S S S . \nB . . . . \nC . . . . \nD . . . . \n")
