@@ -35,8 +35,8 @@ describe Board do
     end
 
     it "validates ship placement is in bounds" do
-      !expect(@board.valid_bounds?(@cruiser, ["E1", "E2"]))
-      !expect(@board.valid_bounds?(@submarine, ["A5", "A6", "A7"]))
+      !expect(@board.valid_placement?(@cruiser, ["E1", "E2"]))
+      !expect(@board.valid_placement?(@submarine, ["A5", "A6", "A7"]))
     end
 
     it "validates ship placement length" do

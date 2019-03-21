@@ -47,7 +47,7 @@ class Board
 
 
 
-  def valid_bounds?(ship,placement_array)
+  def valid_bounds?(placement_array)
    placement_array.all?{|placement| @cells.include?(placement)}
  end
 
@@ -55,13 +55,13 @@ class Board
    placement_array.each{|placement| @cells[placement].place_ship(ship)}
  end
 
- def valid_overlap?(ship,placement_array)
+ def valid_overlap?(placement_array)
    placement_array.all?{|placement| @cells[placement].empty?}
 
  end
 
  def valid_placement?(ship,placement_array)
-   valid_bounds?(ship,placement_array) && valid_consecutive?(ship, placement_array)
+   valid_bounds?(placement_array) && valid_consecutive?(ship, placement_array)
  end
 
 def render(visible = false)
