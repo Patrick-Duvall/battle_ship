@@ -20,7 +20,7 @@ class Board
   end
 
   def valid_coordinate?(coordinate)
-    @cells.include?(coordinate)
+    @cells.include?(coordinate) && !@cells[coordinate].fired_upon?
   end
 
   def valid_length?(ship, placement_array)
@@ -30,7 +30,6 @@ class Board
   def valid_consecutive?(ship, placement_array)
       letters = placement_array.map{|placement| placement[0].ord}
       numbers = placement_array.map{|placement| placement[1].to_i}
-      #dont need "number", left in for readability"
       if letters.uniq.length == 1
         same = "letter"
       elsif numbers.uniq.length == 1

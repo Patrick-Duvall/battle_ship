@@ -30,7 +30,7 @@ class Game
     end
   end
 
-  def choose_game
+  def choose_game_prompt
     puts "Would you like to play a small game, a full game, or a custom game?"
     answered = false
     while answered == false
@@ -179,6 +179,41 @@ class Game
       end
     end
   end
+  def turn_prompt
+    puts "=============COMPUTER BOARD============="
+    puts @cpuboard.render
+    puts "==============PLAYER BOARD=============="
+    puts @playerboard.render(true)
+    print "\n"
+
+    puts "Enter the coordinate for your shot:"
+    shotyet = false
+    while shotyet == false
+      print "> "
+      input = gets.chomp.upcase
+      if @cpuboard.valid_coordinate?(input)
+        yesorno = false
+        puts "Are you sure you want to shoot at #{input}?"
+        while yesorno == false
+          puts "please enter yes or no."
+          print "> "
+          confirmshot = gets.chomp.downcase
+          case
+            when confirmshot == "y" || confirmshot == "yes"
+              puts "Firing now!"
+              @cpuboard.fire_upon(input)
+              yesorno = true
+            when confirmshot == "n" || confirmshot == "no"
+              puts "Aborting the shot."
+              puts "Enter the coordinate for your shot:"
+              yesorno = true
+          end
+        end
+      else
+        puts "Please enter a valid coordinate:"
+      end
+    end
+  end
 end
 
 
@@ -186,5 +221,6 @@ g = Game.new
 
 # g.welcome
 # g.set_board_size
-g.choose_game
+g.choose_game_prompt
 g.place_ship_prompt
+g.turn_prompt
