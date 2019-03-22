@@ -23,10 +23,10 @@ end
     randomizer = 0
     case randomizer
       when 0
-      square = first_square[0] +((first_square[1].ord.+1) % @cpu_board.size )
-    # when 0
+      square = first_square[0] +((first_square[1].ord.+1) % @cpu_board.size ).to_s
+    # when 1
     #   square = first_square[0] +(square_1[1].ord.-1) % @cpu_board.size )
-    # when 0
+    # when 2
     #   square = (first_square[0] +1) +square_1[1]
     # when 0
     #   square = (first_square[0] -1) + square_1[1]
@@ -41,7 +41,7 @@ end
     while ship_array.length < i do
       first_square = @cpu_board.cells.keys.sample
       placement_array = [square_1]
-      binding.pry
+
       (ship.health-1).times do |coordinate|
 
         # cpu_placement_direction
@@ -58,12 +58,4 @@ end
     @cpu_board.place_ship
   end
 
-  # def place_ship_prompt
-  #   p "I have laid out my ships on the grid."
-  #   p "You now need to lay out your ships."
-  #
-  #   until answer.to_i
-  #     answer = gets.chomp until answer >0 && answer < @cpu_board.size
-  #   end
-  # end
 end

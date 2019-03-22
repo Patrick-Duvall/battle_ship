@@ -19,8 +19,8 @@ describe Game do
     expect(@game.welcome).to eq("Welcome to BATTLESHIP \n Enter p to play. Enter q to quit.")
   end
 
-  it "cpu_placement direction  outputs a valid " do
-    expect(@game.cpu_board.valid_placement?(@game.cpu_placement_direction('B2',4) ) )
+  it "cpu_placement direction  outputs a valid coordinate " do
+    expect(@game.cpu_placement_direction('B2', @game.cpu_board.size) ).to eq('B3')   
   end
 
   it "places all ships for cpu correctly" do
