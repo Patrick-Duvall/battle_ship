@@ -23,15 +23,21 @@ class Board
     @cells.include?(coordinate)
   end
 
-  # def valid_length?(ship, placement_array)
-  #   ship.length == placement_array.length
-  # end
+  def valid_length?(ship, placement_array)
+    ship.length == placement_array.length
+  end
 
   def valid_consecutive?(ship, placement_array)
-      letters = placement_array.map{|placement| placement[0].to_i}
+      letters = placement_array.map{|placement| placement[0].ord}
       numbers = placement_array.map{|placement| placement[1].to_i}
       #dont need "number", left in for readability"
-      same = letters.uniq.length == 1 ? "letter" : "number"
+      if letters.uniq.length == 1
+        same = "letter"
+      elsif numbers.uniq.length == 1
+        same = "number"
+      else
+        false
+      end
       if same == "letter"
         consecutive = numbers.chunk_while do |current, next_el|
           current+1 == next_el || current-1 == next_el
@@ -43,8 +49,6 @@ class Board
       end
       consecutive.to_a.length == 1
     end
-
-
 
   def valid_bounds?(placement_array)
    placement_array.all?{|placement| @cells.include?(placement)}
@@ -59,8 +63,11 @@ class Board
 
  end
 
- def valid_placement?(ship,placement_array)
-   valid_bounds?(placement_array) && valid_consecutive?(ship, placement_array)
+ def valid_placement?(ship, placement_array)
+   valid_bounds?(placement_array) && \
+   valid_consecutive?(ship, placement_array) && \
+   valid_length?(ship, placement_array) && \
+   valid_overlap?(placement_array)
  end
 
 def render(visible = false)

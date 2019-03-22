@@ -6,6 +6,8 @@ class Game
 
   def initialize
     @ships = []
+    @playerboard = Board.new
+    @cpuboard = Board.new
   end
 
   # user interaction tests
@@ -42,7 +44,7 @@ class Game
         when input.downcase == "f" || input.downcase == "full"
           self.make_full_game
           answered = true
-        when input.downcase == "s" || input.downcase == "standard"
+        when input.downcase == "s" || input.downcase == "small"
           self.make_small_game
           answered = true
       end
@@ -50,8 +52,6 @@ class Game
   end
 
   def make_full_game
-    @playerboard = Board.new
-    @cpuboard = Board.new
     @playerboard.cell_gen(10)
     @cpuboard.cell_gen(10)
     destroyer = Ship.new("Destroyer", 2)
@@ -63,8 +63,6 @@ class Game
   end
 
   def make_small_game
-    @playerboard = Board.new
-    @cpuboard = Board.new
     @playerboard.cell_gen(4)
     @cpuboard.cell_gen(4)
     submarine = Ship.new("Submarine", 2)
@@ -82,8 +80,6 @@ class Game
       answered = (4..10).to_a.include?(input.to_i)
     end
     print "\n"
-    @playerboard = Board.new
-    @cpuboard = Board.new
     @playerboard.cell_gen(input.to_i)
     @cpuboard.cell_gen(input.to_i)
     self.number_of_ships
@@ -123,15 +119,15 @@ class Game
       while yesorno == false
         puts "please enter yes or no."
         print "> "
-        input = gets.chomp
+        input = gets.chomp.downcase
         case
-          when input.downcase == "y" || input.downcase == "yes"
+          when input == "y" || input == "yes"
             puts "Ship created!"
             customship = Ship.new(shipname, shiplength)
             @ships << customship
             yesorno = true
             shipsleft -= 1
-          when input.downcase == "n" || input.downcase == "no"
+          when input == "n" || input == "no"
             puts "Ship not created."
             yesorno = true
           end
@@ -142,9 +138,45 @@ class Game
   def place_ship_prompt
     puts "I have laid out my ships on the grid."
     puts "You now need to lay out your ships."
-    answer = nil
-    until answer.to_i #boardsize
-      answer = gets.chomp
+    shipstoplace = @ships.length
+    while shipstoplace > 0
+      puts "You have #{shipstoplace} ships left to place."
+      puts "Please enter the spaces you would like to place your ships as a "
+      + "single line"
+      puts "An example is entering A1 A2 A3."
+      print "\n"
+      puts "Now placing #{@ships.last.name}, it is #{@ships.last.length} "+
+      "units long."
+      puts "Your board current board looks like:"
+      puts @playerboard.render(true)
+      yesorno = false
+      while yesorno == false
+      print "> "
+      input = gets.chomp.upcase
+      if @playerboard.valid_placement?(@ships.last, input.split(' '))
+        yesorno = false
+        while yesorno == false
+          puts "Are you sure you want to place your #{@ships.last.name} on " +
+          "squares #{input}?"
+          puts "please enter yes or no."
+          print "> "
+          confirmplacement = gets.chomp.downcase
+          case
+            when confirmplacement == "y" || confirmplacement == "yes"
+              puts "Placing your #{@ships.last.name}."
+              @playerboard.place(@ships.last, input.split(' '))
+              @ships.pop
+              shipstoplace -= 1
+              yesorno = true
+            when confirmplacement == "n" || confirmplacement == "no"
+              puts "Aborting placement."
+              yesorno = true
+          end
+        end
+        else
+          puts "Invalid placement, please try again."
+        end
+      end
     end
   end
 end
@@ -152,6 +184,7 @@ end
 
 g = Game.new
 
-g.welcome
-g.set_board_size
+# g.welcome
+# g.set_board_size
 g.choose_game
+g.place_ship_prompt
