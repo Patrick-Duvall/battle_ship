@@ -19,28 +19,28 @@ end
 
   end
 
-  def cpu_placement_direction(first_square, board_size)
-    randomizer = 0
+  def cpu_placement_direction(first_square, board_size, randomizer)
+    
     case randomizer
       when 0
       square = first_square[0] +((first_square[1].ord.+1) % @cpu_board.size ).to_s
-    # when 1
-    #   square = first_square[0] +(square_1[1].ord.-1) % @cpu_board.size )
-    # when 2
-    #   square = (first_square[0] +1) +square_1[1]
-    # when 0
-    #   square = (first_square[0] -1) + square_1[1]
-
+      when 1
+      square = first_square[0] +((first_square[1].ord.-1) % @cpu_board.size ).to_s
+    when 2
+      square = ((((first_square[0].ord) -65  +1) % @cpu_board.size) + 65).to_s  + first_square[1]
+    when 3
+    first_square =((((first_square[0].ord) -65  +1) % @cpu_board.size) + 65).to_s  + first_square[1]
     end
-
+square
   end
 
   def determine_cpu_placement(ship_array)
     placements = []
     i = 0
+    randomizer = rand(4)
     while ship_array.length < i do
       first_square = @cpu_board.cells.keys.sample
-      placement_array = [square_1]
+      placement_array = [first_square]
 
       (ship.health-1).times do |coordinate|
 

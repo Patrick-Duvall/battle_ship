@@ -22,10 +22,10 @@ describe Game do
   it "cpu_placement direction  outputs a valid coordinate " do
     25.times do
       expect(
-      @game.cpu_placement_direction('B2', @game.cpu_board.size) == 'B3' ||
-      @game.cpu_placement_direction('B2', @game.cpu_board.size) == 'B1' ||
-      @game.cpu_placement_direction('B2', @game.cpu_board.size) == 'A2' ||
-      @game.cpu_placement_direction('B2', @game.cpu_board.size) == 'C2')
+      @game.cpu_placement_direction('B2', @game.cpu_board.size, rand(4)) == 'B3' ||
+      @game.cpu_placement_direction('B2', @game.cpu_board.size, rand(4)) == 'B1' ||
+      @game.cpu_placement_direction('B2', @game.cpu_board.size, rand(4)) == 'A2' ||
+      @game.cpu_placement_direction('B2', @game.cpu_board.size, rand(4)) == 'C2')
     end
   end
 
