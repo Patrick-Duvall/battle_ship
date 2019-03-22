@@ -20,7 +20,7 @@ end
   end
 
   def cpu_placement_direction(first_square, board_size, randomizer)
-    
+
     case randomizer
       when 0
       square = first_square[0] +((first_square[1].ord.+1) % @cpu_board.size ).to_s
@@ -43,8 +43,8 @@ square
       placement_array = [first_square]
 
       (ship.health-1).times do |coordinate|
+        placement_array << cpu_placement_direction(first_square, ship_array[i],randomizer)
 
-        # cpu_placement_direction
       end
       if @cpu_board.valid_placement(ship_array[i], placement_array)
         placements << placement_array

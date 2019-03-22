@@ -30,8 +30,8 @@ describe Game do
   end
 
   it "places all ships for cpu correctly" do
-    skip
-    expect(@game.determine_cpu_placement.each{|placement|placement.valid_placement?})
+
+    expect(@game.determine_cpu_placement([@subcpu, @cruisercpu]).each{|placement|placement.valid_placement?})
   end
 end
 
