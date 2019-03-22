@@ -1,18 +1,6 @@
 Co-authored-by: Patrick <duvallp208@gmail.com>
 Co-authored-by: Chris <davisc1014@gmail.com>
 
-def drawBoard
-        @board = Hash.new
-        ('a'..'h').each do |letter|
-            (1..9).each do |i|
-                @board["#{letter}#{i}"] = "*"
-                print @board["#{letter}#{i}"]
-            end
-            puts
-        end
-end
-
-
 List of all user inputs
 
 SETUP
