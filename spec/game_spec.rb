@@ -20,7 +20,13 @@ describe Game do
   end
 
   it "cpu_placement direction  outputs a valid coordinate " do
-    expect(@game.cpu_placement_direction('B2', @game.cpu_board.size) ).to eq('B3')   
+    25.times do
+      expect(
+      @game.cpu_placement_direction('B2', @game.cpu_board.size) == 'B3' ||
+      @game.cpu_placement_direction('B2', @game.cpu_board.size) == 'B1' ||
+      @game.cpu_placement_direction('B2', @game.cpu_board.size) == 'A2' ||
+      @game.cpu_placement_direction('B2', @game.cpu_board.size) == 'C2')
+    end
   end
 
   it "places all ships for cpu correctly" do
