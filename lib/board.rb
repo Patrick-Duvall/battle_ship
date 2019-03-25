@@ -67,7 +67,7 @@ class Board
  end
 
  def valid_placement?(ship,placement_array)
-   valid_bounds?(placement_array) && valid_consecutive?(ship, placement_array)
+   valid_bounds?(placement_array) && valid_consecutive?(ship, placement_array) && valid_overlap?(placement_array)
  end
 
 def render(visible = false)
