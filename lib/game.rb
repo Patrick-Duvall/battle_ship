@@ -4,6 +4,7 @@ require "./lib/board"
 class Game
 
   def initialize
+    @counter = 0
     @playerships = []
     @cpuships = []
     @playerboard = Board.new
@@ -45,8 +46,26 @@ class Game
     placements
   end
 
-  def cpu_shot
 
+  def cpu_shot
+    testshot = ["A1", "A2", "A3", "A4", "B1", "B2", "B3", "B4"]
+    chosencoordinate = testshot[@counter]
+    @counter += 1
+    # @playerboard.cells[testshot[counter]].fire_upon ## shooty bit here
+    ## MAKE SURE DOES NOT SHOOT TWICE SAME SPOT
+    @playerboard.cells[chosencoordinate].fire_upon
+    cellstate = @playerboard.cells[chosencoordinate].render
+    case
+      when cellstate == "M"
+        puts "My shot on #{chosencoordinate} was a miss."
+      when cellstate == "H"
+        puts "My shot on #{chosencoordinate} was a hit."
+      when cellstate == "X"
+        puts "My shot on #{chosencoordinate} sunk your #{@playerboard.cells[chosencoordinate].ship.name}!"
+        @playerships.delete_if{|ship| ship.name == @playerboard.cells[chosencoordinate].ship.name}
+        self.end_game if @cpuships.length == 0 || @playerships.length == 0
+    end
+    self.turn_prompt
   end
 
   def welcome
@@ -113,6 +132,7 @@ class Game
     submarine = Ship.new("Submarine", 2)
     cruiser = Ship.new("Cruiser", 3)
     @playerships = [cruiser, submarine]
+    # require 'pry'; pry.binding
     cpusubmarine = Ship.new("Submarine", 2)
     cpucruiser = Ship.new("Cruiser", 3)
     @cpuships = [cpucruiser, cpusubmarine]
@@ -190,35 +210,33 @@ class Game
   def place_ship_prompt
     puts "I have laid out my ships on the grid."
     puts "You now need to lay out your ships."
-    shipplacementarray = @playerships
     shipstoplace = @playerships.length
-    while shipstoplace > 0
+    @playerships.each do |ship|
       puts "You have #{shipstoplace} ships left to place."
       puts "Please enter the spaces you would like to place your ships as a "
       + "single line"
       puts "An example is entering A1 A2 A3."
       print "\n"
-      puts "Now placing #{shipplacementarray.last.name}, it is " +
-      "#{shipplacementarray.last.length} units long."
+      puts "Now placing #{ship.name}, it is " +
+      "#{ship.length} units long."
       puts "Your board current board looks like:"
       puts @playerboard.render(true)
       yesorno = false
       while yesorno == false
       print "> "
       input = gets.chomp.upcase
-      if @playerboard.valid_placement?(shipplacementarray.last, input.split(' '))
+      if @playerboard.valid_placement?(ship, input.split(' '))
         yesorno = false
         while yesorno == false
           puts "Are you sure you want to place your " +
-          "#{shipplacementarray.last.name} on squares #{input}?"
+          "#{ship.name} on squares #{input}?"
           puts "please enter yes or no."
           print "> "
           confirmplacement = gets.chomp.downcase
           case
             when confirmplacement == "y" || confirmplacement == "yes"
-              puts "Placing your #{shipplacementarray.last.name}."
-              @playerboard.place(shipplacementarray.last, input.split(' '))
-              shipplacementarray.pop ## FIX
+              puts "Placing your #{ship.name}."
+              @playerboard.place(ship, input.split(' '))
               shipstoplace -= 1
               yesorno = true
             when confirmplacement == "n" || confirmplacement == "no"
@@ -259,6 +277,7 @@ class Game
               @cpuboard.cells[input].fire_upon
               self.result_of_shot(input)
               yesorno = true
+              shotyet = true
             when confirmshot == "n" || confirmshot == "no"
               puts "Aborting the shot."
               puts "Enter the coordinate for your shot:"
@@ -272,17 +291,27 @@ class Game
   end
 
   def result_of_shot(coordinate)
-    cellstate = coordinate.render
+    cellstate = @cpuboard.cells[coordinate].render
     case
     when cellstate == "M"
       puts "Your shot on #{coordinate} was a miss."
-      self.cpushot
+      self.cpu_shot
     when cellstate == "H"
       puts "Your shot on #{coordinate} was a hit."
-      self.cpushot
+      self.cpu_shot
     when cellstate == "X"
-      puts "Your shot on #{coordinate} sunk my #{@cpuboard.cells[coordinate].ship}!"
-      self.cpushot
+      puts "Your shot on #{coordinate} sunk my #{@cpuboard.cells[coordinate].ship.name}!"
+      @cpuships.delete_if{|ship| ship.name == @cpuboard.cells[chosencoordinate].ship.name}
+      self.end_game if @cpuships.length == 0 || @playerships.length == 0
+      self.cpu_shot
+    end
+  end
+
+  def end_game
+    puts "Congradulations, you won!" if @cpuships.length == 0
+    puts "I won!" if @playerships.length == 0
+    print "\n"
+    self.welcome
   end
 
 end

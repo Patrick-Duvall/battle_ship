@@ -26,8 +26,9 @@ class Cell
   end
 
   def render(visable = false)
-    return "S" if !empty? && visable
     case
+      when !empty? && visable && !@fired_upon
+        "S"
       when !@fired_upon
         "."
       when @fired_upon && empty?
