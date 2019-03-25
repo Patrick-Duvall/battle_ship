@@ -1,13 +1,58 @@
 Co-authored-by: Patrick <duvallp208@gmail.com>
 Co-authored-by: Chris <davisc1014@gmail.com>
 
-def drawBoard
-        @board = Hash.new
-        ('a'..'h').each do |letter|
-            (1..9).each do |i|
-                @board["#{letter}#{i}"] = "*"
-                print @board["#{letter}#{i}"]
-            end
-            puts
-        end
-end
+List of all user inputs
+
+SETUP
+
+p to play, q to quit. - if input == p or play, continue; input == q or quit puts quitmessage, exit.
+all others loop.
+
+board size
+input validation is must be int, min 4 max 10
+
+preset or custom ships
+input validation - string == preset or custom
+
+if preset, we use boardsize to determine how many ships - min is example; 2,3 and max is classic battleship
+of 2,3,3,4,5 - we can hardcode based on boardsize, or try to write a statement to evaluate board?
+
+if custom, we ask for number of ships (min 2, max boardsize - 2) -
+then prompt for name of ship and length/health of each. looped to above input.
+input validation - 1st arg cannot be the name of an existing ship.
+2nd arg must be int, min 2 max boardsize - 1
+
+end if
+
+placement of ships. looped to number of ships
+require coordinates in string - possible refactor if we want to go there but that's longterm.
+input validation - We sting.split on space, pass array to valid_placement. All wrong input gets filtered.
+
+TURN
+
+choose coordinate to fire at
+input validation - run string through valid_coordinate, invalid input is scrubbed.
+
+END
+
+List of all outputs -
+
+SETUP
+
+Welcome message, UI 20
+
+prompt for board size, UI 23
+
+prompt for preset or custom ships. UI 26
+
+if preset, list ships. include ship name and length. Example:
+The Cruiser is two units long and the Submarine is three units long.
+
+if custom, prompt for how many ships - UI 32
+Prompt for ship name and length, UI 33 - Repeat prompt looped to number of ships
+
+end if
+
+prompt for ship placement - UI 39 - Repeat prompt looped to number of ships
+
+TURN

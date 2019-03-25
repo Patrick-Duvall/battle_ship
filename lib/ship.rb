@@ -1,6 +1,4 @@
-require "pry"
 class Ship
-
 
 #   @@number_of = 0
 # def self.number_of
