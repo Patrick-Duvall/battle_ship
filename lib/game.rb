@@ -18,18 +18,18 @@ end
     response = gets.strip
 
   end
-
-  def cpu_placement_direction(first_square, board_size, randomizer)
+## may still break on edge cases
+  def cpu_placement_direction(first_square, randomizer)
 
     case randomizer
       when 0
-      square = first_square[0] +((first_square[1].ord.+1) % @cpu_board.size ).to_s
+      square = first_square[0] +(first_square[1].ord.+1).to_s
       when 1
-      square = first_square[0] +((first_square[1].ord.-1) % @cpu_board.size ).to_s
+      square = first_square[0] +(first_square[1].ord.-1).to_s
     when 2
-      square = ((((first_square[0].ord) -65  +1) % @cpu_board.size) + 65).to_s  + first_square[1]
+      square = ((first_square[0].ord) +1 ).to_s  + first_square[1]
     when 3
-    first_square =((((first_square[0].ord) -65  +1) % @cpu_board.size) + 65).to_s  + first_square[1]
+    first_square =((first_square[0].ord) +1 ).to_s  + first_square[1]
     end
 square
   end
