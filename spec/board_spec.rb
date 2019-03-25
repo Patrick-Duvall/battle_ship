@@ -18,6 +18,7 @@ describe Board do
       @cruiser = Ship.new("Cruiser", 3)
       @submarine = Ship.new("Submarine", 2)
     end
+    
     it "has cells" do
       (@board.cells).each{|cell| expect cell.is_a?(Cell)}
       expect(@board.cells['A1'].coordinate).to eq(@cell_a1.coordinate)

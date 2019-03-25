@@ -1,4 +1,3 @@
-require "./lib/ship"
 require "./lib/cell"
 
 class Board
@@ -8,6 +7,7 @@ class Board
     @size = 4
   end
 
+<<<<<<< HEAD
   def letters
     @letters
   end
@@ -15,6 +15,8 @@ class Board
   def numbers
     @numbers
   end
+=======
+>>>>>>> 13ebc48dc78050adc53f503016bb8ee0d38c9f49
   def cell_gen(num=4)
     @size = num
     @letters = ("A".."#{(64 + num).chr}").to_a
@@ -35,26 +37,26 @@ class Board
   end
 
   def valid_consecutive?(ship, placement_array)
-      letters = placement_array.map{|placement| placement[0].ord}
-      numbers = placement_array.map{|placement| placement[1].to_i}
-      if letters.uniq.length == 1
-        same = "letter"
-      elsif numbers.uniq.length == 1
-        same = "number"
-      else
-        false
-      end
-      if same == "letter"
-        consecutive = numbers.chunk_while do |current, next_el|
-          current+1 == next_el || current-1 == next_el
-        end
-      else same == "number"
-        consecutive = letters.chunk_while do |current, next_el|
-          current+1 == next_el || current-1 == next_el
-        end
-      end
-      consecutive.to_a.length == 1
+    letters = placement_array.map{|placement| placement[0].ord}
+    numbers = placement_array.map{|placement| placement[1].to_i}
+    if letters.uniq.length == 1
+      same = "letter"
+    elsif numbers.uniq.length == 1
+      same = "number"
+    else
+      false
     end
+    if same == "letter"
+      consecutive = numbers.chunk_while do |current, next_el|
+        current+1 == next_el || current-1 == next_el
+      end
+    else same == "number"
+      consecutive = letters.chunk_while do |current, next_el|
+        current+1 == next_el || current-1 == next_el
+      end
+    end
+    consecutive.to_a.length == 1
+  end
 
   def valid_bounds?(placement_array)
    placement_array.all?{|placement| @cells.include?(placement)}
