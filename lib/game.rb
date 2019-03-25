@@ -18,7 +18,7 @@ end
     response = gets.strip
 
   end
-## may still break on edge cases
+## Can build array with Nils BUT determine_cpu_placement rejects them
   def cpu_placement_direction(first_square, randomizer)
 
     case randomizer
@@ -43,7 +43,7 @@ square
       placement_array = [first_square]
 
       (ship.health-1).times do |coordinate|
-        placement_array << cpu_placement_direction(first_square, ship_array[i],randomizer)
+        placement_array << cpu_placement_direction(first_square,randomizer)
 
       end
       if @cpu_board.valid_placement(ship_array[i], placement_array)

@@ -29,11 +29,31 @@ describe Game do
     end
   end
 
+
+  it "works with a different valid coordinate " do
+    25.times do
+      expect(
+      @game.cpu_placement_direction('D4',  rand(4)) == 'D5' ||
+      @game.cpu_placement_direction('D4',  rand(4)) == 'D3' ||
+      @game.cpu_placement_direction('D4',  rand(4)) == 'C4' ||
+      @game.cpu_placement_direction('D4',  rand(4)) == 'E4')
+    end
+  end
+
   it "places all ships for cpu correctly" do
     25.times do
     expect(@game.determine_cpu_placement([@subcpu, @cruisercpu]).each{|placement|placement.valid_placement?})
   end
   end
+
+  it "can place different ships" do
+    25.times do
+      #Placing  all 4 ships, just for testing
+    expect(@game.determine_cpu_placement([@subcpu, @cruisercpu,@subplayer,@cruiserplayer]).each{|placement|placement.valid_placement?})
+  end
+  end
+
+
 end
 
   # it "places ships for cpu correctly" do
