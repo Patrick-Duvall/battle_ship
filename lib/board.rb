@@ -2,14 +2,14 @@ require "./lib/ship"
 require "./lib/cell"
 
 class Board
-    attr_reader :cells, :size, :foxy, :numbers
+    attr_reader :cells, :size, :letters, :numbers
   def initialize
     @cells = {}
     @size = 4
   end
 
   def letters
-    @foxy
+    @letters
   end
 
   def numbers
@@ -17,9 +17,9 @@ class Board
   end
   def cell_gen(num=4)
     @size = num
-    @foxy = ("A".."#{(64 + num).chr}").to_a
+    @letters = ("A".."#{(64 + num).chr}").to_a
     @numbers = ("1".."#{num}").to_a
-    @foxy.each do |letter|
+    @letters.each do |letter|
       @numbers.each do |number|
         @cells[(letter+number)] = Cell.new(letter + number)
       end
@@ -82,7 +82,7 @@ def render(visible = false)
   string +="\n"
   counter = 0
   @size.times do |i|
-     string += "#{@foxy[i]} "
+     string += "#{@letters[i]} "
    @size.times do
      string += "#{@cells.values[counter].render(visible)} "
      counter +=1

@@ -71,7 +71,7 @@ square
     placements
   end
 
-  
+  #UI Logic
 
   def choose_game_prompt
     puts "Would you like to play a small game, a full game, or a custom game?"
@@ -79,7 +79,7 @@ square
     while answered == false
       puts "Enter either small, full, or custom."
       print "> "
-      input = gets.chomp
+      input = STDIN.gets.chomp
       case
         when input.downcase == "c" || input.downcase == "custom"
           self.set_board_size
@@ -119,7 +119,7 @@ square
     while answered == false
       puts "Enter only a single number, between 4 and 10, for the size."
       print "> "
-      input = gets.chomp
+      input = STDIN.gets.chomp
       answered = (4..10).to_a.include?(input.to_i)
     end
     print "\n"
@@ -257,14 +257,14 @@ square
       end
     end
   end
-
+ #end UI logic
 end
 
 
 g = Game.new
 
-# g.welcome
-# g.set_board_size
-g.choose_game_prompt
-g.place_ship_prompt
-g.turn_prompt
+# # g.welcome
+# # g.set_board_size
+# g.choose_game_prompt
+# g.place_ship_prompt
+# g.turn_prompt
