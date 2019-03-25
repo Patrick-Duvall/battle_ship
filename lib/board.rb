@@ -1,25 +1,17 @@
-require "./lib/ship"
 require "./lib/cell"
 
 class Board
-    attr_reader :cells, :size, :foxy, :numbers
+    attr_reader :cells, :size, :letters, :numbers
   def initialize
     @cells = {}
     @size = 4
   end
 
-  def letters
-    @foxy
-  end
-
-  def numbers
-    @numbers
-  end
   def cell_gen(num=4)
     @size = num
-    @foxy = ("A".."#{(64 + num).chr}").to_a
+    @letters = ("A".."#{(64 + num).chr}").to_a
     @numbers = ("1".."#{num}").to_a
-    @foxy.each do |letter|
+    @letters.each do |letter|
       @numbers.each do |number|
         @cells[(letter+number)] = Cell.new(letter + number)
       end
@@ -35,26 +27,26 @@ class Board
   end
 
   def valid_consecutive?(ship, placement_array)
-      letters = placement_array.map{|placement| placement[0].ord}
-      numbers = placement_array.map{|placement| placement[1].to_i}
-      if letters.uniq.length == 1
-        same = "letter"
-      elsif numbers.uniq.length == 1
-        same = "number"
-      else
-        false
-      end
-      if same == "letter"
-        consecutive = numbers.chunk_while do |current, next_el|
-          current+1 == next_el || current-1 == next_el
-        end
-      else same == "number"
-        consecutive = letters.chunk_while do |current, next_el|
-          current+1 == next_el || current-1 == next_el
-        end
-      end
-      consecutive.to_a.length == 1
+    letters = placement_array.map{|placement| placement[0].ord}
+    numbers = placement_array.map{|placement| placement[1].to_i}
+    if letters.uniq.length == 1
+      same = "letter"
+    elsif numbers.uniq.length == 1
+      same = "number"
+    else
+      false
     end
+    if same == "letter"
+      consecutive = numbers.chunk_while do |current, next_el|
+        current+1 == next_el || current-1 == next_el
+      end
+    else same == "number"
+      consecutive = letters.chunk_while do |current, next_el|
+        current+1 == next_el || current-1 == next_el
+      end
+    end
+    consecutive.to_a.length == 1
+  end
 
   def valid_bounds?(placement_array)
    placement_array.all?{|placement| @cells.include?(placement)}
@@ -82,7 +74,7 @@ def render(visible = false)
   string +="\n"
   counter = 0
   @size.times do |i|
-     string += "#{@foxy[i]} "
+     string += "#{@letters[i]} "
    @size.times do
      string += "#{@cells.values[counter].render(visible)} "
      counter +=1
