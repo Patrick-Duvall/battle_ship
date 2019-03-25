@@ -60,6 +60,7 @@ class Board
 
   def valid_bounds?(placement_array)
    placement_array.all?{|placement| @cells.include?(placement)}
+
  end
 
  def place(ship, placement_array)
