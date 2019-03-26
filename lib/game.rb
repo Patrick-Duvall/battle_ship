@@ -1,7 +1,14 @@
 require "./lib/ship"
+require "./lib/cell"
 require "./lib/board"
+require "./lib/game"
+require "stringio"
+require 'o_stream_catcher'
+require "pry"
+
 
 class Game
+  attr_reader :playerboard, :cpuboard
 
   def initialize
     @counter = 0
@@ -13,6 +20,7 @@ class Game
 
 ## Can build array with Nils BUT determine_cpu_placement rejects them
   def cpu_placement_direction(first_square, randomizer)
+
     case randomizer
       when 0
       square = first_square[0] +(first_square[1].ord.+1).to_s
@@ -27,18 +35,19 @@ class Game
   end
 
   def determine_cpu_placement(ship_array)
+
     placements = []
     i = 0
     randomizer = rand(4)
-    while ship_array.length < i do
-      first_square = @cpu_board.cells.keys.sample
+    while  i < ship_array.length do
+      first_square = @cpuboard.cells.keys.sample
       placement_array = [first_square]
 
-      (ship.health-1).times do |coordinate|
+      (ship_array[i].health-1).times do |coordinate|
         placement_array << cpu_placement_direction(first_square,randomizer)
       end
 
-      if @cpu_board.valid_placement(ship_array[i], placement_array)
+      if @cpuboard.valid_placement?(ship_array[i], placement_array)
         placements << placement_array
          i +=1
       end
@@ -46,7 +55,17 @@ class Game
     placements
   end
 
-=======
+  def cpu_place_ships
+
+    placements = determine_cpu_placement(@cpuships)
+    counter = 0
+    @cpuships.each do |ship|
+       @cpuboard.place(ship, placements[0])
+       counter +=1
+    end
+  end
+
+
 
   def cpu_shot
     testshot = ["A1", "A2", "A3", "A4", "B1", "B2", "B3", "B4"]
@@ -69,45 +88,43 @@ class Game
     self.turn_prompt
   end
 
+
+
   def welcome
     puts "Welcome to BATTLESHIP"
-    answered = false
-    while answered == false
-      puts "Enter p to play. Enter q to quit."
-      print "> "
-      input = gets.chomp
+    input = ''
+    until input == 'p'
+      puts "Enter p to play. Enter q to quit.]\n"
+      input = STDIN.gets.chomp
       case
-        when input.downcase == "p" || input.downcase == "play"
-          print "\n"
-          self.choose_game_prompt
-          answered = true
-        when input.downcase == "q" || input.downcase == "quit"
+        when input.downcase == "p"
+          "play"
+        when input.downcase == "q"
           puts "Thanks for playing!"
           exit
-      end
+        end
+
     end
   end
 
 
   def choose_game_prompt
-    puts "Would you like to play a small game, a full game, or a custom game?"
-    answered = false
-    while answered == false
+    puts "Would you like to play a (s)mall game, a (f)ull game, or a (c)ustom game?"
+    input = ''
+    until input == 'custom' || input == 'full' || input == 'small'
       puts "Enter either small, full, or custom."
       print "> "
       input = STDIN.gets.chomp
       case
-        when input.downcase == "c" || input.downcase == "custom"
-          self.set_board_size
-          answered = true
-        when input.downcase == "f" || input.downcase == "full"
-          self.make_full_game
-          answered = true
-        when input.downcase == "s" || input.downcase == "small"
-          self.make_small_game
-          answered = true
+      when input.downcase == "c" || input.downcase == "custom"
+          retval ='custom'
+      when input.downcase == "f" || input.downcase == "full"
+          retval ='full'
+      when input.downcase == "s" || input.downcase == "small"
+          retval ='small'
       end
     end
+    retval
   end
 
   def make_full_game
@@ -118,14 +135,14 @@ class Game
     submarine = Ship.new("Submarine", 3)
     battleship = Ship.new("battleship", 4)
     carrier = Ship.new("Carrier", 5)
-    @playerships = [destroyer, cruiser, submarine, battleship, carrier]
+    @playerships += [destroyer, cruiser, submarine, battleship, carrier]
     cpudestroyer = Ship.new("Destroyer", 2)
     cpucruiser = Ship.new("Cruiser", 3)
     cpusubmarine = Ship.new("Submarine", 3)
     cpubattleship = Ship.new("battleship", 4)
     cpucarrier = Ship.new("Carrier", 5)
-    @cpuships = [cpudestroyer, cpucruiser, cpusubmarine, cpubattleship, cpucarrier]
-    self.place_ship_prompt
+    @cpuships += [cpudestroyer, cpucruiser, cpusubmarine, cpubattleship, cpucarrier]
+
   end
 
   def make_small_game
@@ -134,39 +151,36 @@ class Game
     submarine = Ship.new("Submarine", 2)
     cruiser = Ship.new("Cruiser", 3)
     @playerships = [cruiser, submarine]
-    # require 'pry'; pry.binding
+
     cpusubmarine = Ship.new("Submarine", 2)
     cpucruiser = Ship.new("Cruiser", 3)
     @cpuships = [cpucruiser, cpusubmarine]
-    self.place_ship_prompt
+
   end
 
-  def set_board_size
+  def custom_board_size
     puts "Please select the size of the board."
     answered = false
     while answered == false
       puts "Enter only a single number, between 4 and 10, for the size."
       print "> "
-      input = STDIN.gets.chomp
+      input = STDIN.STDIN.gets.chomp
       answered = (4..10).to_a.include?(input.to_i)
     end
     print "\n"
     @playerboard.cell_gen(input.to_i)
     @cpuboard.cell_gen(input.to_i)
-    self.number_of_ships
+
   end
 
-  def number_of_ships
+  def custom_number_of_ships
     puts "How many ships would you like to play with?"
-    answered = false
-    while answered == false
-      puts "Enter only a single number. The minimum is 2, and the maximum is " +
-      "two less then the length of the board."
-      print "> "
-      input = gets.chomp
-      answered = (2..@playerboard.size - 2).to_a.include?(input.to_i)
+    input = ''
+      until input.to_i > 1 && input.to_i < @cpuboard.size - 2
+      puts "Enter a number between 2 and #{@cpuboard.size} inclusive\n> "
+      input = STDIN.gets.chomp
     end
-    self.make_custom_fleet(input.to_i)
+
   end
 
   def make_custom_fleet(shipsleft)
@@ -174,14 +188,14 @@ class Game
       puts "You have #{shipsleft} ships left to create."
       puts "What should this ship be named?"
       print "> "
-      shipname = gets.chomp
+      shipname = STDIN.gets.chomp
         answered = false
         while answered == false
           puts "How long should this ship be?"
           puts "Enter only a single number. The minimum is 2, and the " +
           "maximum is one less then the length of the board."
           print "> "
-          shiplength = gets.chomp
+          shiplength = STDIN.gets.chomp
           answered = (2..@playerboard.size - 1).to_a.include?(shiplength.to_i)
         end
       puts "So, we're creating a ship called #{shipname} that is " +
@@ -190,7 +204,7 @@ class Game
       while yesorno == false
         puts "please enter yes or no."
         print "> "
-        input = gets.chomp.downcase
+        input = STDIN.gets.chomp.downcase
         case
           when input == "y" || input == "yes"
             puts "Ship created!"
@@ -206,8 +220,23 @@ class Game
           end
         end
       end
-      self.place_ship_prompt
+
     end
+
+  def make_game(game_type)
+    case game_type
+    when 'small'
+      make_small_game
+    when 'full'
+      make_full_game
+    when 'custom'
+      custom_board_size
+      custom_number_of_ships
+      make_custom_fleet
+    end
+  end
+
+
 
   def place_ship_prompt
     puts "I have laid out my ships on the grid."
@@ -226,7 +255,7 @@ class Game
       yesorno = false
       while yesorno == false
       print "> "
-      input = gets.chomp.upcase
+      input = STDIN.gets.chomp.upcase
       if @playerboard.valid_placement?(ship, input.split(' '))
         yesorno = false
         while yesorno == false
@@ -234,7 +263,7 @@ class Game
           "#{ship.name} on squares #{input}?"
           puts "please enter yes or no."
           print "> "
-          confirmplacement = gets.chomp.downcase
+          confirmplacement = STDIN.gets.chomp.downcase
           case
             when confirmplacement == "y" || confirmplacement == "yes"
               puts "Placing your #{ship.name}."
@@ -251,7 +280,7 @@ class Game
         end
       end
     end
-    self.turn_prompt
+
   end
 
   def turn_prompt
@@ -265,14 +294,14 @@ class Game
     shotyet = false
     while shotyet == false
       print "> "
-      input = gets.chomp.upcase
+      input = STDIN.gets.chomp.upcase
       if @cpuboard.valid_coordinate?(input)
         yesorno = false
         puts "Are you sure you want to shoot at #{input}?"
         while yesorno == false
           puts "please enter yes or no."
           print "> "
-          confirmshot = gets.chomp.downcase
+          confirmshot = STDIN.gets.chomp.downcase
           case
             when confirmshot == "y" || confirmshot == "yes"
               puts "Firing now!"
@@ -309,19 +338,34 @@ class Game
     end
   end
 
-  def end_game
-    puts "Congradulations, you won!" if @cpuships.length == 0
-    puts "I won!" if @playerships.length == 0
-    print "\n"
-    self.welcome
+  def game_over
+    @cpuships.length == 0 || @playerships.length == 0
+
   end
 
+  def game_over_message
+    puts @cpuships.length == 0 ? "Congradulations, you won!" : "I won"
+  end
+
+  def play_game
+    welcome
+
+    make_game(choose_game_prompt)
+
+    cpu_place_ships
+    place_ship_prompt
+    turn_prompt until game_over
+    game_over_message
+    welcome
+  end
 end
+
+
 
 
 g = Game.new
 
-g.welcome
+g.play_game
 # g.set_board_size
 # g.choose_game_prompt
 # g.place_ship_prompt

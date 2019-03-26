@@ -21,7 +21,9 @@ describe Game do
 
   it "cpu_placement direction  outputs a valid coordinate " do
     25.times do
+      binding.pry
       expect(
+
       @game.cpu_placement_direction('B2',  rand(4)) == 'B3' ||
       @game.cpu_placement_direction('B2',  rand(4)) == 'B1' ||
       @game.cpu_placement_direction('B2',  rand(4)) == 'A2' ||
@@ -53,26 +55,26 @@ describe Game do
   end
   end
 
-  it "chooses a proper game based on prompt" do
-
-    string_io = StringIO.new #New instance of StringIO
-    string_io.puts "c"       #Stub user input of 0
-    string_io.rewind
-            #Start form first stub
-    $stdin = string_io
-
-    # result, stdout, stderr = OStreamCatcher.catch do
-    #   @game.choose_game_prompt
-    # end
-    
-      #Override Ruby's standard input
-    expect("custom").to eq(@game.choose_game_prompt)
-
-    # player.turn!(board)      #Call method
-    $stdin = STDIN           #Reset Ruby's standard input
-
-
-  end
+  # it "chooses a proper game based on prompt" do
+  #
+  #   string_io = StringIO.new #New instance of StringIO
+  #   string_io.puts "c"       #Stub user input of 0
+  #   string_io.rewind
+  #           #Start form first stub
+  #   $stdin = string_io
+  #
+  #   # result, stdout, stderr = OStreamCatcher.catch do
+  #   #   @game.choose_game_prompt
+  #   # end
+  #
+  #     #Override Ruby's standard input
+  #   expect("custom").to eq(@game.choose_game_prompt)
+  #
+  #   # player.turn!(board)      #Call method
+  #   $stdin = STDIN           #Reset Ruby's standard input
+  #
+  #
+  # end
 
 
 end
