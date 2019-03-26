@@ -2,28 +2,18 @@ require "./lib/ship"
 require "./lib/cell"
 require "./lib/board"
 require "./lib/game"
-require "stringio"
-require 'o_stream_catcher'
-require "pry"
+# require "stringio"
+# require 'o_stream_catcher'
+# require "pry"
 
-<<<<<<< HEAD
-class Game
-  attr_reader :playerships, :cpuships, :playerboard, :cpuboard
-  attr_writer :user_interface
-=======
 
 class Game
   attr_reader :playerboard, :cpuboard
->>>>>>> f12098fd6f169ea9c84ffcc0ef1f2ca6e59410f8
   def initialize
     @playerships = []
     @cpuships = []
     @playerboard = Board.new
     @cpuboard = Board.new
-<<<<<<< HEAD
-    @user_interface = nil
-    @computer = Computer.new
-=======
   end
 
 ## Can build array with Nils BUT determine_cpu_placement rejects them
@@ -41,7 +31,6 @@ class Game
   end
 
   def determine_cpu_placement(ship_array)
-    placements = []
     i = 0
     randomizer = rand(4)
     while i < ship_array.length do
@@ -52,22 +41,21 @@ class Game
         placement_array << first_square
       end
       if @cpuboard.valid_placement?(ship_array[i], placement_array)
-        placements << placement_array
+        @cpuboard.place(ship_array[i], placement_array)
          i +=1
       end
     end
-    binding.pry
-    placements
   end
 
-  def cpu_place_ships
-    placements = determine_cpu_placement(@cpuships)
-    counter = 0
-    @cpuships.each do |ship|
-       @cpuboard.place(ship, placements[0])
-       counter +=1
-    end
-  end
+  # def cpu_place_ships
+  #   placements = determine_cpu_placement(@cpuships)
+  #   counter = 0
+  #   @cpuships.each do |ship|
+  #      @cpuboard.place(ship, placements[counter])
+  #      counter +=1
+  #   end
+  #   require 'pry'; pry.binding
+  # end
 
   def welcome
     puts "Welcome to BATTLESHIP"
@@ -102,7 +90,6 @@ class Game
       end
     end
     retval
->>>>>>> f12098fd6f169ea9c84ffcc0ef1f2ca6e59410f8
   end
 
   def make_full_game
@@ -119,11 +106,7 @@ class Game
     cpusubmarine = Ship.new("Submarine", 3)
     cpubattleship = Ship.new("battleship", 4)
     cpucarrier = Ship.new("Carrier", 5)
-<<<<<<< HEAD
-    @cpuships = [cpudestroyer, cpucruiser, cpusubmarine, cpubattleship, cpucarrier]
-=======
     @cpuships += [cpudestroyer, cpucruiser, cpusubmarine, cpubattleship, cpucarrier]
->>>>>>> f12098fd6f169ea9c84ffcc0ef1f2ca6e59410f8
 
   end
 
@@ -136,28 +119,6 @@ class Game
     cpusubmarine = Ship.new("Submarine", 2)
     cpucruiser = Ship.new("Cruiser", 3)
     @cpuships = [cpucruiser, cpusubmarine]
-<<<<<<< HEAD
-
-  end
-
-  def make_custom_ship_for_both_players(name, length)
-    playercustomship = Ship.new(name, length)
-    @playerships << playercustomship
-    cpucustomship = Ship.new(name, length)
-    @cpuships << cpucustomship
-  end
-
-  def play_game
-    @user_interface.welcome
-    @user_interface.choose_game_prompt
-    @computer
-    @user_interface.place_ship_prompt
-    @user_interface.turn_prompt
-
-
-  end
-
-=======
   end
 
   def custom_board_size
@@ -223,11 +184,11 @@ class Game
 
   def make_game(game_type)
     case game_type
-    when 'small'
+    when 'small' || 's'
       make_small_game
-    when 'full'
+    when 'full' || 'f'
       make_full_game
-    when 'custom'
+    when 'custom' || 'c'
       custom_board_size
       shipnum = custom_number_of_ships
       make_custom_fleet(shipnum.to_i)
@@ -285,13 +246,13 @@ class Game
     puts @cpuboard.render
     puts "==============PLAYER BOARD=============="
     puts @playerboard.render(true)
-    puts "\nEnter the coordinate for your shot:\n>"
+    print "\nEnter the coordinate for your shot:\n>"
     input = ''
-    until @cpuboard.cells.keys.include?(input)
+    until @cpuboard.valid_coordinate?(input)
     input = STDIN.gets.chomp.upcase
       if @cpuboard.valid_coordinate?(input)
         puts "Firing now!"
-        sleep 2
+        # sleep 2
         @cpuboard.cells[input].fire_upon
       else
         puts "Please enter a valid coordinate:"
@@ -314,8 +275,9 @@ class Game
   end
 
   def cpu_shot
-    coordinate = @playerboard.cells.keys.sample until !already_shot.include?(coordinate)
     already_shot = []
+    coordinate = @playerboard.cells.keys.sample
+    # until !@playerboard.cells[coordinate].fired_upon?
     already_shot << coordinate
 
     @playerboard.cells[coordinate].fire_upon
@@ -330,7 +292,6 @@ class Game
         game_over_message if game_over?
     end
   end
->>>>>>> f12098fd6f169ea9c84ffcc0ef1f2ca6e59410f8
 
   def game_over?
     @cpuships.all?(&:sunk?) || @playerships.all?(&:sunk?)
@@ -338,7 +299,7 @@ class Game
   end
 
   def game_over_message
-    puts @cpuships.all?(&:sunk?) == 0 ? "Congratulations, you won!" : "I won"
+    puts @cpuships.all?(&:sunk?) == 0 ? "Congratulations, you won!" : "I won"  #review
   end
 
   def play_turns
@@ -351,15 +312,13 @@ class Game
   def play_game
     welcome
     make_game(choose_game_prompt)
-    cpu_place_ships
+    determine_cpu_placement(@cpuships)
     place_ship_prompt
     play_turns
     sleep 3
     welcome
   end
 end
-<<<<<<< HEAD
-=======
 
 
 
@@ -371,4 +330,3 @@ g.play_game
 # g.choose_game_prompt
 # g.place_ship_prompt
 # g.turn_prompt
->>>>>>> f12098fd6f169ea9c84ffcc0ef1f2ca6e59410f8

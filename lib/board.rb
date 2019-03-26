@@ -59,7 +59,6 @@ class Board
 
  def valid_overlap?(placement_array)
    placement_array.all?{|placement| @cells[placement].empty?}
-
  end
 
  def valid_placement?(ship, placement_array)
