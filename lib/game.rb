@@ -23,13 +23,13 @@ class Game
 
     case randomizer
       when 0
-      square = first_square[0] +(first_square[1].ord.+1).to_s
+      square = first_square[0] +(first_square[1].to_i+1).to_s
       when 1
-      square = first_square[0] +(first_square[1].ord.-1).to_s
+      square = first_square[0] +(first_square[1].to_i -1).to_s
     when 2
-      square = ((first_square[0].ord) +1 ).to_s  + first_square[1]
+      square = ((first_square[0].ord) +1 ).chr  + first_square[1]
     when 3
-    first_square =((first_square[0].ord) +1 ).to_s  + first_square[1]
+    first_square =((first_square[0].ord) -1 ).chr  + first_square[1]
     end
     # square
   end
@@ -40,11 +40,14 @@ class Game
     i = 0
     randomizer = rand(4)
     while  i < ship_array.length do
+
       first_square = @cpuboard.cells.keys.sample
       placement_array = [first_square]
 
       (ship_array[i].health-1).times do |coordinate|
-        placement_array << cpu_placement_direction(first_square,randomizer)
+        binding.pry
+        first_square = cpu_placement_direction(first_square,randomizer)
+        placement_array << first_square
       end
 
       if @cpuboard.valid_placement?(ship_array[i], placement_array)

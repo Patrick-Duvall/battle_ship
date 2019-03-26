@@ -45,6 +45,7 @@ describe Game do
   it "places all ships for cpu correctly" do
     25.times do
     expect(@game.determine_cpu_placement([@subcpu, @cruisercpu]).each{|placement|placement.valid_placement?})
+    expect(@game.determine_cpu_placement([@subcpu, @cruisercpu]).length).to eq 2
   end
   end
 
