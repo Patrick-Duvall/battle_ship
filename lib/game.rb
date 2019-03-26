@@ -54,7 +54,6 @@ class Game
   #      @cpuboard.place(ship, placements[counter])
   #      counter +=1
   #   end
-  #   require 'pry'; pry.binding
   # end
 
   def welcome
@@ -76,16 +75,17 @@ class Game
   def choose_game_prompt
     puts "Would you like to play a (s)mall game, a (f)ull game, or a (c)ustom game?"
     input = ''
-    until input == 'custom' || input == 'full' || input == 'small'
+    until input == 'custom' || input == 'full' || input == 'small' \
+       || input == 'c'      || input == 'f'    || input == 's'
       puts "Enter either small, full, or custom."
       print "> "
-      input = STDIN.gets.chomp
+      input = STDIN.gets.chomp.downcase
       case
-      when input.downcase == "c" || input.downcase == "custom"
+      when input == "c" || input == "custom"
           retval ='custom'
-      when input.downcase == "f" || input.downcase == "full"
+      when input == "f" || input == "full"
           retval ='full'
-      when input.downcase == "s" || input.downcase == "small"
+      when input == "s" || input == "small"
           retval ='small'
       end
     end
@@ -107,7 +107,6 @@ class Game
     cpubattleship = Ship.new("battleship", 4)
     cpucarrier = Ship.new("Carrier", 5)
     @cpuships += [cpudestroyer, cpucruiser, cpusubmarine, cpubattleship, cpucarrier]
-
   end
 
   def make_small_game
@@ -155,7 +154,7 @@ class Game
         while answered == false
           puts "How long should this ship be?"
           puts "Enter only a single number. The minimum is 2, and the " +
-          "maximum is one less then the length of the board.\n> "
+          "maximum is #{(@playerboard.size) -1}\n> "
           shiplength = STDIN.gets.chomp
           answered = (2..@playerboard.size - 1).to_a.include?(shiplength.to_i)
         end
@@ -184,11 +183,11 @@ class Game
 
   def make_game(game_type)
     case game_type
-    when 'small' || 's'
+    when 'small'
       make_small_game
-    when 'full' || 'f'
+    when 'full'
       make_full_game
-    when 'custom' || 'c'
+    when 'custom'
       custom_board_size
       shipnum = custom_number_of_ships
       make_custom_fleet(shipnum.to_i)
@@ -248,13 +247,14 @@ class Game
     puts @playerboard.render(true)
     print "\nEnter the coordinate for your shot:\n>"
     input = ''
-    until @cpuboard.valid_coordinate?(input)
-    input = STDIN.gets.chomp.upcase
+    until @cpuboard.cells.keys.include?(input)
+    input = gets.chomp.upcase
       if @cpuboard.valid_coordinate?(input)
         puts "Firing now!"
         # sleep 2
         @cpuboard.cells[input].fire_upon
       else
+        input = ''
         puts "Please enter a valid coordinate:"
       end
     end
@@ -275,10 +275,12 @@ class Game
   end
 
   def cpu_shot
-    already_shot = []
+    # already_shot = []
+    # until coordinate == @playerboard.valid_coordinate?(coordinate)
     coordinate = @playerboard.cells.keys.sample
-    # until !@playerboard.cells[coordinate].fired_upon?
-    already_shot << coordinate
+    # already_shot << coordinate
+
+
 
     @playerboard.cells[coordinate].fire_upon
     cellstate = @playerboard.cells[coordinate].render
@@ -295,11 +297,10 @@ class Game
 
   def game_over?
     @cpuships.all?(&:sunk?) || @playerships.all?(&:sunk?)
-
   end
 
   def game_over_message
-    puts @cpuships.all?(&:sunk?) == 0 ? "Congratulations, you won!" : "I won"  #review
+    puts @cpuships.all?(&:sunk?) == true ? "Congratulations, you won!" : "I won"  #review
   end
 
   def play_turns
