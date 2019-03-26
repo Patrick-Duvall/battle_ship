@@ -9,7 +9,6 @@ require "pry"
 
 class Game
   attr_reader :playerboard, :cpuboard
-
   def initialize
     @counter = 0
     @playerships = []
@@ -20,7 +19,6 @@ class Game
 
 ## Can build array with Nils BUT determine_cpu_placement rejects them
   def cpu_placement_direction(first_square, randomizer)
-
     case randomizer
       when 0
       square = first_square[0] +((first_square[1].to_i)+1).to_s
@@ -31,14 +29,13 @@ class Game
     when 3
     first_square =((first_square[0].ord) -1 ).chr  + first_square[1]
     end
-    # square
   end
 
   def determine_cpu_placement(ship_array)
     placements = []
     i = 0
     randomizer = rand(4)
-    while  i < ship_array.length do
+    while i < ship_array.length do
       first_square = @cpuboard.cells.keys.sample
       placement_array = [first_square]
       (ship_array[i].health-1).times do |coordinate|
@@ -50,11 +47,11 @@ class Game
          i +=1
       end
     end
+    binding.pry
     placements
   end
 
   def cpu_place_ships
-
     placements = determine_cpu_placement(@cpuships)
     counter = 0
     @cpuships.each do |ship|
@@ -76,7 +73,6 @@ class Game
           puts "Thanks for playing!"
           exit
         end
-
     end
   end
 
@@ -140,18 +136,16 @@ class Game
     print "\n"
     @playerboard.cell_gen(input.to_i)
     @cpuboard.cell_gen(input.to_i)
-
   end
 
   def custom_number_of_ships
     puts "How many ships would you like to play with?"
     input = ''
-    binding.pry
-      until input.to_i > 1 && input.to_i < @cpuboard.size - 2
-      puts "Enter a number between 2 and #{@cpuboard.size -2}, inclusive\n>"
+      until input.to_i > 1 && input.to_i <= @cpuboard.size - 2
+      puts "Enter a number between 2 and #{(@cpuboard.size) - 2}, inclusive\n>"
       input = STDIN.gets.chomp
     end
-
+    input
   end
 
   def make_custom_fleet(shipsleft)
@@ -189,7 +183,6 @@ class Game
           end
         end
       end
-
     end
 
   def make_game(game_type)
@@ -200,8 +193,8 @@ class Game
       make_full_game
     when 'custom'
       custom_board_size
-      custom_number_of_ships
-      make_custom_fleet
+      shipnum = custom_number_of_ships
+      make_custom_fleet(shipnum.to_i)
     end
   end
 
@@ -249,7 +242,6 @@ class Game
         end
       end
     end
-
   end
 
   def turn_prompt
@@ -263,12 +255,13 @@ class Game
     input = STDIN.gets.chomp.upcase
       if @cpuboard.valid_coordinate?(input)
         puts "Firing now!"
+        sleep 2
         @cpuboard.cells[input].fire_upon
-        self.result_of_shot(input)
       else
         puts "Please enter a valid coordinate:"
       end
     end
+    input
   end
 
   def result_of_shot(coordinate)
@@ -276,57 +269,55 @@ class Game
     case
     when cellstate == "M"
       puts "Your shot on #{coordinate} was a miss."
-      self.cpu_shot
     when cellstate == "H"
       puts "Your shot on #{coordinate} was a hit."
-      self.cpu_shot
     when cellstate == "X"
       puts "Your shot on #{coordinate} sunk my #{@cpuboard.cells[coordinate].ship.name}!"
-      @cpuships.delete_if{|ship| ship.name == @cpuboard.cells[chosencoordinate].ship.name}
-      self.end_game if @cpuships.length == 0 || @playerships.length == 0
-      self.cpu_shot
+      game_over_message if game_over?
     end
   end
 
   def cpu_shot
-    testshot = ["A1", "A2", "A3", "A4", "B1", "B2", "B3", "B4"]
-    chosencoordinate = testshot[@counter]
-    @counter += 1
-    # @playerboard.cells[testshot[counter]].fire_upon ## shooty bit here
-    ## MAKE SURE DOES NOT SHOOT TWICE SAME SPOT
-    @playerboard.cells[chosencoordinate].fire_upon
-    cellstate = @playerboard.cells[chosencoordinate].render
+    coordinate = @playerboard.cells.keys.sample until !already_shot.include?(coordinate)
+    already_shot = []
+    already_shot << coordinate
+
+    @playerboard.cells[coordinate].fire_upon
+    cellstate = @playerboard.cells[coordinate].render
     case
       when cellstate == "M"
-        puts "My shot on #{chosencoordinate} was a miss."
+        puts "My shot on #{coordinate} was a miss."
       when cellstate == "H"
-        puts "My shot on #{chosencoordinate} was a hit."
+        puts "My shot on #{coordinate} was a hit."
       when cellstate == "X"
-        puts "My shot on #{chosencoordinate} sunk your #{@playerboard.cells[chosencoordinate].ship.name}!"
-        @playerships.delete_if{|ship| ship.name == @playerboard.cells[chosencoordinate].ship.name}
-        self.end_game if @cpuships.length == 0 || @playerships.length == 0
+        puts "My shot on #{coordinate} sunk your #{@playerboard.cells[coordinate].ship.name}!"
+        game_over_message if game_over?
     end
-    self.turn_prompt
   end
 
-  def game_over
-    @cpuships.length == 0 || @playerships.length == 0
+  def game_over?
+    @cpuships.all?(&:sunk?) || @playerships.all?(&:sunk?)
 
   end
 
   def game_over_message
-    puts @cpuships.length == 0 ? "Congratulations, you won!" : "I won"
+    puts @cpuships.all?(&:sunk?) == 0 ? "Congratulations, you won!" : "I won"
+  end
+
+  def play_turns
+    until game_over?
+      result_of_shot(turn_prompt)
+      cpu_shot
+    end
   end
 
   def play_game
     welcome
-
     make_game(choose_game_prompt)
-
     cpu_place_ships
     place_ship_prompt
-    turn_prompt until game_over
-    game_over_message
+    play_turns
+    sleep 3
     welcome
   end
 end
