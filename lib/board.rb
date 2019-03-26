@@ -7,16 +7,6 @@ class Board
     @size = 4
   end
 
-<<<<<<< HEAD
-  def letters
-    @letters
-  end
-
-  def numbers
-    @numbers
-  end
-=======
->>>>>>> 13ebc48dc78050adc53f503016bb8ee0d38c9f49
   def cell_gen(num=4)
     @size = num
     @letters = ("A".."#{(64 + num).chr}").to_a
