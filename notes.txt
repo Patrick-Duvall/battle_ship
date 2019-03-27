@@ -39,20 +39,67 @@ List of all outputs -
 
 SETUP
 
-Welcome message, UI 20
+Welcome message, UI 8
 
-prompt for board size, UI 23
+prompt for board size, UI 11
 
-prompt for preset or custom ships. UI 26
+prompt for preset or custom ships. UI 14
 
 if preset, list ships. include ship name and length. Example:
 The Cruiser is two units long and the Submarine is three units long.
 
-if custom, prompt for how many ships - UI 32
-Prompt for ship name and length, UI 33 - Repeat prompt looped to number of ships
+if custom, prompt for how many ships - UI 20
+Prompt for ship name and length, UI 21 - Repeat prompt looped to number of ships
 
 end if
 
-prompt for ship placement - UI 39 - Repeat prompt looped to number of ships
+prompt for ship placement - UI 27 - Repeat prompt looped to number of ships
 
 TURN
+
+start of turn display both boards - computer board is on top, no CPU ships visible
+
+prompt for user to fire at cpu - player will always go first. - UI 33
+
+result of player shot - Example: Your shot on A4 was a miss.
+
+result of cpu shot - Example: My shot on C1 was a miss.
+
+loop to start of turn.
+
+GAME END
+
+result of game, example: You won! || I won!
+prompt to play again - reuse UI 8
+
+END
+
+refactor with CPU class and runner - ETA 5 mins for runner and 30 for refactor.
+
+
+if @lastshot != "H"
+algo for shots - determine possible ships on each cell - store that in cell hash.
+
+before shot run recalculate iterator. count ++ if ship can exist there.
+
+first step - determine distance to edge. edge can be a shot.
+
+1..boardsize
+65..65+boardsize
+
+per each coordinate - check if in bounds, iterate in all 4 directions. use ship placement code.
+halt if cell checked has been fired_upon || if out of bounds.
+
+toedge = number of cells to nearest edge.
+probweight ++ if toedge >= ship.length - iterate through playerships.
+
+totalweight = probweight + adjacent probweight.
+
+fire at > totalweight.
+
+else - loop until lastshot = "X"
+
+search adjacent - highest weight. initial shot
+
+subsequent shots - if ord of lasthit == ord of lastshot ++ num or -- if weighted.
+if num of lasthit == num of lastshot ++ ord
