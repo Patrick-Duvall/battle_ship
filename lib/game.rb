@@ -113,7 +113,7 @@ class Game
         until answered == true
           puts "How long should this ship be?"
           puts "Enter only a single number. The minimum is 2, and the " +
-          "maximum is #{(@playerboard.size) -1}\n> "
+          "maximum is #{(@playerboard.size) -1}.\n> "
           shiplength = STDIN.gets.chomp
           answered = (2..@playerboard.size - 1).to_a.include?(shiplength.to_i)
         end
@@ -152,6 +152,7 @@ class Game
       make_custom_fleet(shipnum.to_i)
     end
   end
+
   def place_ship_prompt
     puts "I have laid out my ships on the grid."
     puts "You now need to lay out your ships."
@@ -235,7 +236,9 @@ class Game
   end
 
   def game_over_message
+    print "\n"
     puts @cpuships.all?(&:sunk?) == true ? "Congratulations, you won!" : "I won!"
+    sleep 3
   end
 
   def play_turns
