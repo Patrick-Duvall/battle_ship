@@ -13,7 +13,7 @@ end
     when 0
       square = first_square[0] + ((first_square[1].to_i) + 1).to_s
     when 1
-      square = first_square[0] + ((first_square[1].to_i) -1 ).to_s
+      square = first_square[0] + ((first_square[1].to_i) - 1).to_s
     when 2
       square = ((first_square[0].ord) + 1).chr + first_square[1]
     when 3
@@ -23,7 +23,7 @@ end
 
   def determine_cpu_placement(ship_array)
     i = 0
-    until i > ship_array.length do
+    until i == ship_array.length do
       first_square = @cpuboard.cells.keys.sample
       placement_array = [first_square]
       (ship_array[i].health-1).times do |coordinate|

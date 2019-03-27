@@ -152,9 +152,6 @@ class Game
       make_custom_fleet(shipnum.to_i)
     end
   end
-
-
-
   def place_ship_prompt
     puts "I have laid out my ships on the grid."
     puts "You now need to lay out your ships."
