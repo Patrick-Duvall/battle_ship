@@ -1,60 +1,19 @@
 require "./lib/ship"
 require "./lib/cell"
 require "./lib/board"
-require "./lib/game"
-# require "stringio"
-# require 'o_stream_catcher'
-# require "pry"
-
+require "./lib/cpu"
 
 class Game
+
   attr_reader :playerboard, :cpuboard
+
   def initialize
     @playerships = []
     @cpuships = []
     @playerboard = Board.new
     @cpuboard = Board.new
+    @cpu = CPU.new(@cpuboard, @playerboard)
   end
-
-## Can build array with Nils BUT determine_cpu_placement rejects them
-  def cpu_placement_direction(first_square, randomizer)
-    case randomizer
-      when 0
-      square = first_square[0] +((first_square[1].to_i)+1).to_s
-      when 1
-      square = first_square[0] +((first_square[1].to_i) -1).to_s
-    when 2
-      square = ((first_square[0].ord) +1 ).chr  + first_square[1]
-    when 3
-    first_square =((first_square[0].ord) -1 ).chr  + first_square[1]
-    end
-  end
-
-  def determine_cpu_placement(ship_array)
-    i = 0
-    randomizer = rand(4)
-    while i < ship_array.length do
-      first_square = @cpuboard.cells.keys.sample
-      placement_array = [first_square]
-      (ship_array[i].health-1).times do |coordinate|
-        first_square = cpu_placement_direction(first_square,randomizer)
-        placement_array << first_square
-      end
-      if @cpuboard.valid_placement?(ship_array[i], placement_array)
-        @cpuboard.place(ship_array[i], placement_array)
-         i +=1
-      end
-    end
-  end
-
-  # def cpu_place_ships
-  #   placements = determine_cpu_placement(@cpuships)
-  #   counter = 0
-  #   @cpuships.each do |ship|
-  #      @cpuboard.place(ship, placements[counter])
-  #      counter +=1
-  #   end
-  # end
 
   def welcome
     puts "Welcome to BATTLESHIP"
@@ -63,12 +22,12 @@ class Game
       puts "Enter p to play. Enter q to quit.\n"
       input = STDIN.gets.chomp
       case
-        when input.downcase == "p"
-          "play"
-        when input.downcase == "q"
-          puts "Thanks for playing!"
-          exit
-        end
+      when input.downcase == "p"
+        "play"
+      when input.downcase == "q"
+        puts "Thanks for playing!"
+        exit
+      end
     end
   end
 
@@ -123,7 +82,7 @@ class Game
   def custom_board_size
     puts "Please select the size of the board."
     answered = false
-    while answered == false
+    until answered == true
       puts "Enter only a single number, between 4 and 10, for the size."
       print "> "
       input = STDIN.gets.chomp
@@ -145,13 +104,13 @@ class Game
   end
 
   def make_custom_fleet(shipsleft)
-    while shipsleft > 0
+    until shipsleft == 0
       puts "You have #{shipsleft} ships left to create."
       puts "What should this ship be named?"
       print "> "
       shipname = STDIN.gets.chomp
         answered = false
-        while answered == false
+        until answered == true
           puts "How long should this ship be?"
           puts "Enter only a single number. The minimum is 2, and the " +
           "maximum is #{(@playerboard.size) -1}\n> "
@@ -161,25 +120,25 @@ class Game
       puts "So, we're creating a ship called #{shipname} that is " +
       "#{shiplength} units long?"
       yesorno = false
-      while yesorno == false
+      until yesorno == true
         puts "please enter yes or no.\n> "
         input = STDIN.gets.chomp.downcase
         case
-          when input == "y" || input == "yes"
-            puts "Ship created!"
-            playercustomship = Ship.new(shipname, shiplength)
-            @playerships << playercustomship
-            cpucustomship = Ship.new(shipname, shiplength)
-            @cpuships << cpucustomship
-            yesorno = true
-            shipsleft -= 1
-          when input == "n" || input == "no"
-            puts "Ship not created."
-            yesorno = true
-          end
+        when input == "y" || input == "yes"
+          puts "Ship created!"
+          playercustomship = Ship.new(shipname, shiplength)
+          @playerships << playercustomship
+          cpucustomship = Ship.new(shipname, shiplength)
+          @cpuships << cpucustomship
+          yesorno = true
+          shipsleft -= 1
+        when input == "n" || input == "no"
+          puts "Ship not created."
+          yesorno = true
         end
       end
     end
+  end
 
   def make_game(game_type)
     case game_type
@@ -211,26 +170,26 @@ class Game
       puts "Your board current board looks like:"
       puts @playerboard.render(true)
       yesorno = false
-      while yesorno == false
+      until yesorno == true
       print "> "
       input = STDIN.gets.chomp.upcase
       if @playerboard.valid_placement?(ship, input.split(' '))
         yesorno = false
-        while yesorno == false
+        until yesorno == true
           puts "Are you sure you want to place your " +
           "#{ship.name} on squares #{input}?"
           puts "please enter yes or no."
           print "> "
           confirmplacement = STDIN.gets.chomp.downcase
           case
-            when confirmplacement == "y" || confirmplacement == "yes"
-              puts "Placing your #{ship.name}."
-              @playerboard.place(ship, input.split(' '))
-              shipstoplace -= 1
-              yesorno = true
-            when confirmplacement == "n" || confirmplacement == "no"
-              puts "Aborting placement."
-              yesorno = true
+          when confirmplacement == "y" || confirmplacement == "yes"
+            puts "Placing your #{ship.name}."
+            @playerboard.place(ship, input.split(' '))
+            shipstoplace -= 1
+            yesorno = true
+          when confirmplacement == "n" || confirmplacement == "no"
+            puts "Aborting placement."
+            yesorno = true
           end
         end
         else
@@ -248,7 +207,7 @@ class Game
     print "\nEnter the coordinate for your shot:\n>"
     input = ''
     until @cpuboard.cells.keys.include?(input)
-    input = gets.chomp.upcase
+    input = STDIN.gets.chomp.upcase
       if @cpuboard.valid_coordinate?(input)
         puts "Firing now!"
         # sleep 2
@@ -270,64 +229,32 @@ class Game
       puts "Your shot on #{coordinate} was a hit."
     when cellstate == "X"
       puts "Your shot on #{coordinate} sunk my #{@cpuboard.cells[coordinate].ship.name}!"
-      game_over_message if game_over?
     end
   end
 
-  def cpu_shot
-    # already_shot = []
-    # until coordinate == @playerboard.valid_coordinate?(coordinate)
-    coordinate = @playerboard.cells.keys.sample
-    # already_shot << coordinate
-
-
-
-    @playerboard.cells[coordinate].fire_upon
-    cellstate = @playerboard.cells[coordinate].render
-    case
-      when cellstate == "M"
-        puts "My shot on #{coordinate} was a miss."
-      when cellstate == "H"
-        puts "My shot on #{coordinate} was a hit."
-      when cellstate == "X"
-        puts "My shot on #{coordinate} sunk your #{@playerboard.cells[coordinate].ship.name}!"
-        game_over_message if game_over?
-    end
-  end
 
   def game_over?
     @cpuships.all?(&:sunk?) || @playerships.all?(&:sunk?)
   end
 
   def game_over_message
-    puts @cpuships.all?(&:sunk?) == true ? "Congratulations, you won!" : "I won"  #review
+    puts @cpuships.all?(&:sunk?) == true ? "Congratulations, you won!" : "I won!"
   end
 
   def play_turns
     until game_over?
       result_of_shot(turn_prompt)
-      cpu_shot
+      @cpu.cpu_shot
     end
+    game_over_message
   end
 
   def play_game
     welcome
     make_game(choose_game_prompt)
-    determine_cpu_placement(@cpuships)
+    @cpu.determine_cpu_placement(@cpuships)
     place_ship_prompt
     play_turns
-    sleep 3
-    welcome
+    play_game
   end
 end
-
-
-
-
-g = Game.new
-
-g.play_game
-# g.set_board_size
-# g.choose_game_prompt
-# g.place_ship_prompt
-# g.turn_prompt

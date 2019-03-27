@@ -73,3 +73,33 @@ result of game, example: You won! || I won!
 prompt to play again - reuse UI 8
 
 END
+
+refactor with CPU class and runner - ETA 5 mins for runner and 30 for refactor.
+
+
+if @lastshot != "H"
+algo for shots - determine possible ships on each cell - store that in cell hash.
+
+before shot run recalculate iterator. count ++ if ship can exist there.
+
+first step - determine distance to edge. edge can be a shot.
+
+1..boardsize
+65..65+boardsize
+
+per each coordinate - check if in bounds, iterate in all 4 directions. use ship placement code.
+halt if cell checked has been fired_upon || if out of bounds.
+
+toedge = number of cells to nearest edge.
+probweight ++ if toedge >= ship.length - iterate through playerships.
+
+totalweight = probweight + adjacent probweight.
+
+fire at > totalweight.
+
+else - loop until lastshot = "X"
+
+search adjacent - highest weight. initial shot
+
+subsequent shots - if ord of lasthit == ord of lastshot ++ num or -- if weighted.
+if num of lasthit == num of lastshot ++ ord

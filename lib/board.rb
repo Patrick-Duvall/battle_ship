@@ -50,15 +50,11 @@ class Board
 
   def valid_bounds?(placement_array)
    placement_array.all?{|placement| @cells.include?(placement)}
-
- end
-
- def place(ship, placement_array)
-   placement_array.each{|placement| @cells[placement].place_ship(ship)}
  end
 
  def valid_overlap?(placement_array)
-   placement_array.all?{|placement| @cells[placement].empty?}
+   placement_array.all?{|placement| @cells[placement].empty?} && \
+   placement_array.uniq.length == placement_array.length
  end
 
  def valid_placement?(ship, placement_array)
@@ -68,21 +64,25 @@ class Board
    valid_overlap?(placement_array)
  end
 
-def render(visible = false)
-  string = '  '
-  @size.times{|num| string += "#{num + 1} "}
-  string +="\n"
-  counter = 0
-  @size.times do |i|
-     string += "#{@letters[i]} "
-   @size.times do
-     string += "#{@cells.values[counter].render(visible)} "
-     counter +=1
-   end
-   string += "\n"
-end
-  string
-end
+ def place(ship, placement_array)
+   placement_array.each{|placement| @cells[placement].place_ship(ship)}
+ end
+
+ def render(visible = false)
+    string = '  '
+    @size.times{|num| string += "#{num + 1} "}
+    string +="\n"
+    counter = 0
+    @size.times do |i|
+      string += "#{@letters[i]} "
+      @size.times do
+        string += "#{@cells.values[counter].render(visible)} "
+        counter +=1
+      end
+    string += "\n"
+    end
+    string
+  end
 
 
 end
