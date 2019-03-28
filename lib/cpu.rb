@@ -5,6 +5,7 @@ def initialize(cpuboard, playerboard)
   @playerboard = playerboard
   @lasthit = nil
   @lastshotwashit = false
+  @targetships = []
 end
 
 ## Can build array with Nils BUT determine_cpu_placement rejects them
@@ -15,13 +16,14 @@ end
     when 1
       square = first_square[0] + ((first_square[1].to_i) - 1).to_s
     when 2
-      square = ((first_square[0].ord) + 1).chr + first_square[1]
+      square = ((first_square[0].ord) + 1).to_s + first_square[1]
     when 3
-      square = ((first_square[0].ord) - 1).chr + first_square[1]
+      square = ((first_square[0].ord) - 1).to_s + first_square[1]
     end
   end
 
   def determine_cpu_placement(ship_array)
+    @targetships = ship_array
     i = 0
     until i == ship_array.length do
       first_square = @cpuboard.cells.keys.sample
@@ -39,7 +41,6 @@ end
 
   def cpu_shot
     chosen = false
-    coordinate = nil
     until chosen == true
       coordinate = @playerboard.cells.keys.sample
       chosen = true if @playerboard.valid_coordinate?(coordinate)
@@ -77,6 +78,4 @@ end
         @lastshotwashit = false
     end
   end
-
-
 end

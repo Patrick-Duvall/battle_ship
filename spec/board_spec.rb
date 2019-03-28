@@ -18,7 +18,7 @@ describe Board do
       @cruiser = Ship.new("Cruiser", 3)
       @submarine = Ship.new("Submarine", 2)
     end
-    
+
     it "has cells" do
       (@board.cells).each{|cell| expect cell.is_a?(Cell)}
       expect(@board.cells['A1'].coordinate).to eq(@cell_a1.coordinate)
@@ -26,47 +26,47 @@ describe Board do
     end
 
     it "validates coordinates" do
-      expect(@board.valid_coordinate?("A1"))
-      expect(@board.valid_coordinate?("D4"))
-      !expect(@board.valid_coordinate?("A5"))
-      !expect(@board.valid_coordinate?("E1"))
-      !expect(@board.valid_coordinate?("A22"))
+      expect(@board.valid_coordinate?("A1")).to be true
+      expect(@board.valid_coordinate?("D4")).to be true
+      expect(@board.valid_coordinate?("A5")).to be false
+      expect(@board.valid_coordinate?("E1")).to be false
+      expect(@board.valid_coordinate?("A22")).to be false
     end
 
     it "validates ship placement is in bounds" do
-      !expect(@board.valid_placement?(@cruiser, ["E1", "E2"]))
-      !expect(@board.valid_placement?(@subcpu, ["A5", "A6", "A7"]))
+      expect(@board.valid_placement?(@cruiser, ["E1", "E2"])).to be false
+      expect(@board.valid_placement?(@subcpu, ["A5", "A6", "A7"])).to be false
     end
 
     it "validates ship placement length" do
-      !expect(@board.valid_placement?(@cruiser, ["A1", "A2"]))
-      !expect(@board.valid_placement?(@submarine, ["A1", "A2", "A3"]))
-      !expect(@board.valid_placement?(@submarine, ["A1", "A2", "A3", "A4"]))
+      expect(@board.valid_placement?(@cruiser, ["A1", "A2"])).to be false
+      expect(@board.valid_placement?(@submarine, ["A1", "A2", "A3"])).to be false
+      expect(@board.valid_placement?(@submarine, ["A1", "A2", "A3", "A4"])).to be false
     end
 
     it "validates ship placement is consecutive" do
 
-      !expect(@board.valid_placement?(@cruiser, ["A1", "A2", "A4"]))
-      !expect(@board.valid_placement?(@submarine, ["A1", "C1"]))
-      !expect(@board.valid_placement?(@cruiser, ["A3", "A2", "A1"]))
-      !expect(@board.valid_placement?(@submarine, ["C1", "B1"]))
+      expect(@board.valid_placement?(@cruiser, ["A1", "A2", "A4"])).to be false
+      expect(@board.valid_placement?(@submarine, ["A1", "C1"])).to be false
+      expect(@board.valid_placement?(@cruiser, ["A3", "A2", "A1"])).to be false
+      expect(@board.valid_placement?(@submarine, ["C1", "B1"])).to be false
     end
 
     it "validates ship placement is not diagonal" do
-     !expect(@board.valid_placement?(@cruiser, ["A1", "B2", "C3"]))
-     !expect(@board.valid_placement?(@submarine, ["C2", "D3"]))
-     !expect(@board.valid_placement?(@cruiser, ["A1", "B2"]))
+     expect(@board.valid_placement?(@cruiser, ["A1", "B2", "C3"])).to be false
+     expect(@board.valid_placement?(@submarine, ["C2", "D3"])).to be false
+     expect(@board.valid_placement?(@cruiser, ["A1", "B2"])).to be false
    end
 
    it "validates correct ship placements" do
-    expect(@board.valid_placement?(@submarine, ["A1", "A2"]))
-    expect(@board.valid_placement?(@cruiser, ["B1", "C1", "D1"]))
+    expect(@board.valid_placement?(@submarine, ["A1", "A2"])).to be true
+    expect(@board.valid_placement?(@cruiser, ["B1", "C1", "D1"])).to be true
    end
 
    it "validates no overlap when placing ships" do
      @board.place(@cruiser, ["A1", "A2", "A3"])
-     !expect(@board.valid_placement?(@submarine, ["A1", "B1"]))
-     expect(@board.valid_placement?(@submarine, ["B1", "B2"]))
+     expect(@board.valid_placement?(@submarine, ["A1", "B1"])).to be false
+     expect(@board.valid_placement?(@submarine, ["B1", "B2"])).to be true
    end
 
   end
