@@ -103,3 +103,62 @@ search adjacent - highest weight. initial shot
 
 subsequent shots - if ord of lasthit == ord of lastshot ++ num or -- if weighted.
 if num of lasthit == num of lastshot ++ ord
+
+def distance_to_edge(cell)
+  count = 0
+  findshiphealth = @targetships.max{|ship| ship.length}.health
+  ncelledge = nil
+  scelledge = nil
+  ecelledge = nil
+  wcelledge = nil
+  until ncelledge != nil
+    counter = 1
+    if @playerboard.valid_coordinate?((((cell[0]).ord - counter).chr + cell[1]))
+      counter += 1
+    else
+      count += (counter - 1) if findshiphealth >= counter
+      ncelledge = "done"
+    end
+  end
+  until scelledge != nil
+    counter = 1
+    if @playerboard.valid_coordinate?((((cell[0]).ord + counter).chr + cell[1]))
+      counter += 1
+    else
+      count += (counter - 1) if findshiphealth >= counter
+      scelledge = "done"
+      require 'pry'; binding.pry
+    end
+  end
+  until ecelledge != nil
+    counter = 1
+    if @playerboard.valid_coordinate?((((cell[1]) - counter).chr + cell[0]))
+      counter += 1
+    else
+      count += (counter - 1) if findshiphealth >= counter
+      ecelledge = "done"
+    end
+  end
+  until wcelledge != nil
+    counter = 1
+    if @playerboard.valid_coordinate?((((cell[1]) + counter).chr + cell[0]))
+      counter += 1
+    else
+      count += (counter - 1) if findshiphealth >= counter
+      wcelledge = "done"
+    end
+  end
+  return count
+end
+
+def cpu_shot
+  chosen = false
+  coordinate = nil
+  weight = Hash.new(0)
+  weight.merge!(@cpuboard.cells)
+  until chosen == true
+    weight.each_key{|key| weight[key] = distance_to_edge(key)}
+    coordinate = weight.max_by{|key, value| value}[0]
+    # coordinate = @playerboard.cells.keys.sample
+    chosen = true if @playerboard.valid_coordinate?(coordinate)
+  end
