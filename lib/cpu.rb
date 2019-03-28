@@ -39,64 +39,11 @@ end
     end
   end
 
-  def distance_to_edge(cell)
-    count = 0
-    @targetships.each do |ship|
-      findshiphealth = ship.health
-      ncelledge = nil
-      scelledge = nil
-      ecelledge = nil
-      wcelledge = nil
-      ncounter = 1
-      scounter = 1
-      ecounter = 1
-      wcounter = 1
-      until ncelledge != nil
-        if @playerboard.valid_coordinate?((((cell[0]).ord - ncounter).chr + cell[1]))
-          ncounter += 1
-        else
-          count += 1 if findshiphealth <= ncounter
-          ncelledge = "done"
-        end
-      end
-      until scelledge != nil
-        if @playerboard.valid_coordinate?((((cell[0]).ord + scounter).chr + cell[1]))
-          scounter += 1
-        else
-          count += 1 if findshiphealth <= scounter
-          scelledge = "done"
-        end
-      end
-      until ecelledge != nil
-        if @playerboard.valid_coordinate?(cell[0] + (((cell[1]).to_i - ecounter).to_s))
-          ecounter += 1
-        else
-          count += 1 if findshiphealth <= ecounter
-          ecelledge = "done"
-        end
-      end
-      until wcelledge != nil
-        if @playerboard.valid_coordinate?(cell[0] + (((cell[1]).to_i + wcounter).to_s))
-          wcounter += 1
-        else
-          count += 1 if findshiphealth <= wcounter
-          wcelledge = "done"
-        end
-      end
-    end
-    return count
-  end
-
   def cpu_shot
     chosen = false
-    coordinate = nil
-    weight = Hash.new(0)
-    weight.merge!(@cpuboard.cells)
     until chosen == true
-      weight.each_key{|key| weight[key] = distance_to_edge(key)} if !@lastshotwashit
-      coordinate = weight.max_by{|key, value| value}[0]
+      coordinate = @playerboard.cells.keys.sample
       chosen = true if @playerboard.valid_coordinate?(coordinate)
-      weight.delete(coordinate)
     end
     if @lastshotwashit == true && @lasthit != nil
       chosen = false

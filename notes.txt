@@ -106,46 +106,47 @@ if num of lasthit == num of lastshot ++ ord
 
 def distance_to_edge(cell)
   count = 0
-  findshiphealth = @targetships.max{|ship| ship.length}.health
-  ncelledge = nil
-  scelledge = nil
-  ecelledge = nil
-  wcelledge = nil
-  until ncelledge != nil
-    counter = 1
-    if @playerboard.valid_coordinate?((((cell[0]).ord - counter).chr + cell[1]))
-      counter += 1
-    else
-      count += (counter - 1) if findshiphealth >= counter
-      ncelledge = "done"
+  @targetships.each do |ship|
+    findshiphealth = ship.health
+    ncelledge = nil
+    scelledge = nil
+    ecelledge = nil
+    wcelledge = nil
+    ncounter = 1
+    scounter = 1
+    ecounter = 1
+    wcounter = 1
+    until ncelledge != nil
+      if @playerboard.valid_coordinate?((((cell[0]).ord - ncounter).chr + cell[1]))
+        ncounter += 1
+      else
+        count += 1 if findshiphealth <= ncounter
+        ncelledge = "done"
+      end
     end
-  end
-  until scelledge != nil
-    counter = 1
-    if @playerboard.valid_coordinate?((((cell[0]).ord + counter).chr + cell[1]))
-      counter += 1
-    else
-      count += (counter - 1) if findshiphealth >= counter
-      scelledge = "done"
-      require 'pry'; binding.pry
+    until scelledge != nil
+      if @playerboard.valid_coordinate?((((cell[0]).ord + scounter).chr + cell[1]))
+        scounter += 1
+      else
+        count += 1 if findshiphealth <= scounter
+        scelledge = "done"
+      end
     end
-  end
-  until ecelledge != nil
-    counter = 1
-    if @playerboard.valid_coordinate?((((cell[1]) - counter).chr + cell[0]))
-      counter += 1
-    else
-      count += (counter - 1) if findshiphealth >= counter
-      ecelledge = "done"
+    until ecelledge != nil
+      if @playerboard.valid_coordinate?(cell[0] + (((cell[1]).to_i - ecounter).to_s))
+        ecounter += 1
+      else
+        count += 1 if findshiphealth <= ecounter
+        ecelledge = "done"
+      end
     end
-  end
-  until wcelledge != nil
-    counter = 1
-    if @playerboard.valid_coordinate?((((cell[1]) + counter).chr + cell[0]))
-      counter += 1
-    else
-      count += (counter - 1) if findshiphealth >= counter
-      wcelledge = "done"
+    until wcelledge != nil
+      if @playerboard.valid_coordinate?(cell[0] + (((cell[1]).to_i + wcounter).to_s))
+        wcounter += 1
+      else
+        count += 1 if findshiphealth <= wcounter
+        wcelledge = "done"
+      end
     end
   end
   return count
